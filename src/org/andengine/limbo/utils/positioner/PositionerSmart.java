@@ -43,19 +43,13 @@ public class PositionerSmart extends BasePositioner {
 	@Override
 	public void place(IEntity pImmovable, IEntity pMovable, AnchorPointsPair pAnchorsPair,
 			final float tX, final float tY, boolean pMoveVertically, boolean pMoveHorizontally) {
-		pImmovable.convertLocalCoordinatesToSceneCoordinates(
-				pAnchorsPair.anchorA.X * pImmovable.getWidth(),
-				pAnchorsPair.anchorA.Y * pImmovable.getHeight(), TMP_ENTITY_ANCHORED);
+		
+//		pImmovable.convertLocalCoordinatesToSceneCoordinates(
+//				pAnchorsPair.anchorA.X * pImmovable.getWidth(),
+//				pAnchorsPair.anchorA.Y * pImmovable.getHeight(), TMP_ENTITY_ANCHORED);
 
-		TMP_ENTITY_MOVABLE[0] = pAnchorsPair.anchorB.X;
-		TMP_ENTITY_MOVABLE[1] = pAnchorsPair.anchorB.Y;
-		final float correctiveRotation = 360 - pMovable.getRotation();
-		MathUtils.rotateAroundCenter(TMP_ENTITY_MOVABLE, -correctiveRotation, 
-				pMovable.getRotationCenterX(), pMovable.getRotationCenterY());
-
-		pMovable.convertLocalCoordinatesToSceneCoordinates(
-				TMP_ENTITY_MOVABLE[0] * pMovable.getWidth(),
-				TMP_ENTITY_MOVABLE[1] * pMovable.getHeight(), TMP_ENTITY_MOVABLE);
+		translateRotation(pImmovable, pAnchorsPair.anchorA, TMP_ENTITY_ANCHORED);
+		translateRotation(pMovable, pAnchorsPair.anchorB, TMP_ENTITY_MOVABLE);
 
 		final float dX = !pMoveHorizontally ? 0 : TMP_ENTITY_MOVABLE[0] - TMP_ENTITY_ANCHORED[0];
 		final float dY = !pMoveVertically ? 0 : TMP_ENTITY_MOVABLE[1] - TMP_ENTITY_ANCHORED[1];
@@ -65,6 +59,18 @@ public class PositionerSmart extends BasePositioner {
 	// ===========================================================
 	// Methods
 	// ===========================================================
+
+	private void translateRotation(IEntity pTargetEntity, AnchorPoint pAnchorsPoint, final float[] pReuse) {
+		pReuse[0] = pAnchorsPoint.X;
+		pReuse[1] = pAnchorsPoint.Y;
+		final float correctiveRotation = 360 - pTargetEntity.getRotation();
+		MathUtils.rotateAroundCenter(pReuse, -correctiveRotation, 
+				pTargetEntity.getRotationCenterX(), pTargetEntity.getRotationCenterY());
+
+		pTargetEntity.convertLocalCoordinatesToSceneCoordinates(
+				pReuse[0] * pTargetEntity.getWidth(),
+				pReuse[1] * pTargetEntity.getHeight(), pReuse);
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes
