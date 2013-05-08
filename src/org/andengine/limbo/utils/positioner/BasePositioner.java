@@ -39,11 +39,39 @@ public abstract class BasePositioner {
 		place(pImmovable, pMovable, eAnchorPointsPair.VER_TOP_C.relation, tx, ty);
 	}
 
+	public void placeTopOfLeftsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeTopOfLeftsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeTopOfLeftsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.VER_TOP_L.relation, tx, ty);
+	}
+
+	public void placeTopOfRightsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeTopOfRightsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeTopOfRightsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.VER_TOP_R.relation, tx, ty);
+	}
+
 	public void placeBelowOfAndCenter(IEntity pImmovable, IEntity pMovable) {
 		placeBelowOfAndCenter(pImmovable, pMovable, 0, 0);
 	}
 	public void placeBelowOfAndCenter(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
 		place(pImmovable, pMovable, eAnchorPointsPair.VER_BTM_C.relation, tx, ty);
+	}
+
+	public void placeBelowOfLeftsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeBelowOfLeftsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeBelowOfLeftsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.VER_BTM_L.relation, tx, ty);
+	}
+
+	public void placeBelowOfRightsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeBelowOfRightsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeBelowOfRightsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.VER_BTM_R.relation, tx, ty);
 	}
 
 	public void placeLeftOfAndCenter(IEntity pImmovable, IEntity pMovable) {
@@ -53,11 +81,39 @@ public abstract class BasePositioner {
 		place(pImmovable, pMovable, eAnchorPointsPair.HOR_L_CNT.relation, tx, ty);
 	}
 
+	public void placeLeftOfTopsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeLeftOfTopsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeLeftOfTopsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.HOR_L_TOP.relation, tx, ty);
+	}
+
+	public void placeLeftOfBottomsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeLeftOfBottomsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeLeftOfBottomsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.HOR_L_BTM.relation, tx, ty);
+	}
+
 	public void placeRightOfAndCenter(IEntity pImmovable, IEntity pMovable) {
 		placeRightOfAndCenter(pImmovable, pMovable, 0, 0);
 	}
 	public void placeRightOfAndCenter(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
 		place(pImmovable, pMovable, eAnchorPointsPair.HOR_R_CNT.relation, tx, ty);
+	}
+
+	public void placeRightOfTopsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeRightOfTopsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeRightOfTopsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.HOR_R_TOP.relation, tx, ty);
+	}
+
+	public void placeRightOfBottomsAligned(IEntity pImmovable, IEntity pMovable) {
+		placeRightOfBottomsAligned(pImmovable, pMovable, 0, 0);
+	}
+	public void placeRightOfBottomsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		place(pImmovable, pMovable, eAnchorPointsPair.HOR_R_BTM.relation, tx, ty);
 	}
 
 	public void centerOnHorizontalAxes(IEntity pImmovable, IEntity pMovable) {
