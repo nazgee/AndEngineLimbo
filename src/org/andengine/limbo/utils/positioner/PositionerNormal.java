@@ -17,7 +17,7 @@ public class PositionerNormal extends BasePositioner {
 	// ===========================================================
 	private static PositionerNormal INSTANCE;
 
-	static float[] TMP_ENTITY_ANCHORED = new float[2];
+	static float[] TMP_ENTITY_IMMOVABLE = new float[2];
 	static float[] TMP_ENTITY_MOVABLE = new float[2];
 	// ===========================================================
 	// Constructors
@@ -44,14 +44,14 @@ public class PositionerNormal extends BasePositioner {
 			final float tX, final float tY, boolean pMoveVertically, boolean pMoveHorizontally) {
 		pImmovable.convertLocalCoordinatesToSceneCoordinates(
 				pAnchorsPair.anchorA.X * pImmovable.getWidth(),
-				pAnchorsPair.anchorA.Y * pImmovable.getHeight(), TMP_ENTITY_ANCHORED);
+				pAnchorsPair.anchorA.Y * pImmovable.getHeight(), TMP_ENTITY_IMMOVABLE);
 
 		pMovable.convertLocalCoordinatesToSceneCoordinates(
 				pAnchorsPair.anchorB.X * pMovable.getWidth(),
 				pAnchorsPair.anchorB.Y * pMovable.getHeight(), TMP_ENTITY_MOVABLE);
 
-		final float dX = !pMoveHorizontally ? 0 : TMP_ENTITY_MOVABLE[0] - TMP_ENTITY_ANCHORED[0];
-		final float dY = !pMoveVertically ? 0 : TMP_ENTITY_MOVABLE[1] - TMP_ENTITY_ANCHORED[1];
+		final float dX = !pMoveHorizontally ? 0 : TMP_ENTITY_MOVABLE[0] - TMP_ENTITY_IMMOVABLE[0];
+		final float dY = !pMoveVertically ? 0 : TMP_ENTITY_MOVABLE[1] - TMP_ENTITY_IMMOVABLE[1];
 
 		pMovable.setPosition(pMovable.getX() - dX + tX, pMovable.getY() - dY + tY);
 	}
