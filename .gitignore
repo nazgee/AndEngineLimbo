@@ -11,4 +11,5 @@ gdbserver
 .hg
 local.properties
 .settings
+.project
 AndEngineLiveWallpaperExtension.iml
