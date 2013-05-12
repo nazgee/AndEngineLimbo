@@ -65,8 +65,9 @@ public class PositionerSmart extends BasePositioner {
 	private void convertUserToScene(IEntity pTargetEntity, AnchorPoint pAnchorsPoint, final float[] pReuse) {
 		pReuse[0] = pAnchorsPoint.X;
 		pReuse[1] = pAnchorsPoint.Y;
-		final float correctiveRotation = 360 - pTargetEntity.getRotation();
-		MathUtils.rotateAroundCenter(pReuse, -correctiveRotation, 
+
+		final float rotation = pTargetEntity.getLocalToSceneTransformation().getRotation();
+		MathUtils.rotateAroundCenter(pReuse, rotation,
 				pTargetEntity.getRotationCenterX(), pTargetEntity.getRotationCenterY());
 
 		pTargetEntity.convertLocalCoordinatesToSceneCoordinates(

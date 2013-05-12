@@ -1,7 +1,6 @@
 package org.andengine.limbo.utils.positioner;
 
 import org.andengine.entity.IEntity;
-import org.andengine.util.adt.transformation.Transformation;
 import org.andengine.util.math.MathUtils;
 /**
  * (c) 2013 Michal Stawinski (nazgee)
