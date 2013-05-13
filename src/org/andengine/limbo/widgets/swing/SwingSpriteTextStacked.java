@@ -1,4 +1,4 @@
-package org.andengine.limbo.widgets;
+package org.andengine.limbo.widgets.swing;
 
 import java.util.Stack;
 

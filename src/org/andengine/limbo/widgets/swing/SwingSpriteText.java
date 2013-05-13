@@ -1,10 +1,11 @@
-package org.andengine.limbo.widgets;
+package org.andengine.limbo.widgets.swing;
 
-import org.andengine.entity.sprite.NineSliceSprite;
+import org.andengine.entity.text.Text;
 import org.andengine.limbo.utils.positioner.PositionerSceneRelative;
-import org.andengine.opengl.shader.PositionColorTextureCoordinatesShaderProgram;
+import org.andengine.opengl.font.Font;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.adt.color.Color;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
 /**
@@ -13,36 +14,30 @@ import org.andengine.util.modifier.ease.IEaseFunction;
  * @author Michal Stawinski
  * @since 20:31:01 - 13.05.2013
  */
-public abstract class SwingSprite<T> extends Swing<T> {
-	private static final int ZINDEX_FACE = 1;
+public class SwingSpriteText extends SwingSprite<CharSequence> {
 	// ===========================================================
 	// Constants
 	// ===========================================================
-	protected final NineSliceSprite mFace;
+
+	private Text mText;
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
-//	ClipEntity mActiveArea
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public SwingSprite(final float pX, final float pY, final float pWidth, final float pHeight, final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
-			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, float pAnimationTimeOut, final float pAnimationTimeIn,
+	public SwingSpriteText(final float pX, final float pY, final float pWidth, final float pHeight, final Font pFont, int pCharsCapacity,
+			final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
+			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, final float pAnimationTimeOut, final float pAnimationTimeIn, 
 			final IEaseFunction pEasingOut, final IEaseFunction pEasingIn, final VertexBufferObjectManager pVertexBufferObjectManager) {
-		super(pX, pY, pWidth, pHeight, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
+		super(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
 				pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn,
 				pEasingOut, pEasingIn, pVertexBufferObjectManager);
-		setPosition(pX, pY);
-
-		{
-			this.mFace = new NineSliceSprite(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom, pVertexBufferObjectManager, PositionColorTextureCoordinatesShaderProgram.getInstance());
-			getWindow().attachChild(this.mFace);
-			PositionerSceneRelative.getInstance().center(this, this.mFace);
-			this.mFace.setZIndex(ZINDEX_FACE);
-		}
-
-		getWindow().sortChildren(false);
+		this.mText = new Text(0, 0, pFont, "123456789", pCharsCapacity, pVertexBufferObjectManager);
+		attachChild(this.mText);
+		PositionerSceneRelative.getInstance().center(getContainer(), this.mText);
 	}
 
 	// ===========================================================
@@ -52,7 +47,19 @@ public abstract class SwingSprite<T> extends Swing<T> {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	@Override
+	public void updateValue(CharSequence pValue) {
+		this.mText.setText(pValue);
+	}
 
+	/**
+	 * Can be used to e.g. change {@link Color} of text displayed in a {@link Swing}
+	 * 
+	 * @return
+	 */
+	public Text getText() {
+		return this.mText;
+	}
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -60,4 +67,5 @@ public abstract class SwingSprite<T> extends Swing<T> {
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
+
 }

@@ -1,42 +1,52 @@
-package org.andengine.limbo.widgets;
+package org.andengine.limbo.widgets.swing;
 
-import org.andengine.entity.text.Text;
+import org.andengine.entity.sprite.NineSliceSprite;
 import org.andengine.limbo.utils.positioner.PositionerSceneRelative;
-import org.andengine.opengl.font.Font;
+import org.andengine.opengl.shader.PositionColorTextureCoordinatesShaderProgram;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
 /**
+ * {@link Swing} that creates a sprite on top of it's window.
+ * 
+ * TODO: pass zindex ass constructor's parameter, so we can also have face hidden below the window, when zindex<0 is passed
+ * 
  * (c) 2013 Michal Stawinski (nazgee)
  *
  * @author Michal Stawinski
  * @since 20:31:01 - 13.05.2013
  */
-public class SwingSpriteText extends SwingSprite<CharSequence> {
+public abstract class SwingSprite<T> extends Swing<T> {
+	private static final int ZINDEX_FACE = 1;
 	// ===========================================================
 	// Constants
 	// ===========================================================
-
-	private Text mText;
+	protected final NineSliceSprite mFace;
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
-
+//	ClipEntity mActiveArea
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public SwingSpriteText(final float pX, final float pY, final float pWidth, final float pHeight, final Font pFont, int pCharsCapacity,
-			final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
-			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, final float pAnimationTimeOut, final float pAnimationTimeIn, 
+	public SwingSprite(final float pX, final float pY, final float pWidth, final float pHeight, final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
+			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, float pAnimationTimeOut, final float pAnimationTimeIn,
 			final IEaseFunction pEasingOut, final IEaseFunction pEasingIn, final VertexBufferObjectManager pVertexBufferObjectManager) {
-		super(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
+		super(pX, pY, pWidth, pHeight, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
 				pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn,
 				pEasingOut, pEasingIn, pVertexBufferObjectManager);
-		this.mText = new Text(0, 0, pFont, "123456789", pCharsCapacity, pVertexBufferObjectManager);
-		attachChild(this.mText);
-		PositionerSceneRelative.getInstance().center(getContainer(), this.mText);
+		setPosition(pX, pY);
+
+		{
+			this.mFace = new NineSliceSprite(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom, pVertexBufferObjectManager, PositionColorTextureCoordinatesShaderProgram.getInstance());
+			getWindow().attachChild(this.mFace);
+			PositionerSceneRelative.getInstance().center(this, this.mFace);
+			this.mFace.setZIndex(ZINDEX_FACE);
+		}
+
+		getWindow().sortChildren(false);
 	}
 
 	// ===========================================================
@@ -46,14 +56,7 @@ public class SwingSpriteText extends SwingSprite<CharSequence> {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	@Override
-	public void updateValue(CharSequence pValue) {
-		this.mText.setText(pValue);
-	}
 
-	public Text getText() {
-		return this.mText;
-	}
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -61,5 +64,4 @@ public class SwingSpriteText extends SwingSprite<CharSequence> {
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
-
 }
