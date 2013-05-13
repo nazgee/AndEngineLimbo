@@ -1,6 +1,9 @@
 package org.andengine.limbo.utils.positioner;
 
 import org.andengine.entity.IEntity;
+import org.andengine.util.adt.transformation.Transformation;
+import org.andengine.util.math.MathConstants;
+import org.andengine.util.math.MathUtils;
 /**
  * (c) 2013 Michal Stawinski (nazgee)
  *
@@ -29,9 +32,36 @@ public abstract class BasePositioner {
 	// ===========================================================
 	abstract public void place(IEntity pImmovable, IEntity pMovable, AnchorPointsPair pAnchorsPair,
 			final float tX, final float tY, boolean pMoveVertically, boolean pMoveHorizontally);
+
 	// ===========================================================
 	// Methods
 	// ===========================================================
+	/**
+	 * This method will attempt to extract rotation from a given transformation.
+	 * Unfortunately it works fine only if scaling is uniform (sX == sY) and no skew is applied.
+	 * @param transformation
+	 * @param pReuse
+	 * @return
+	 */
+	protected static float calculateRotation(Transformation transformation, final float[] pReuse) {
+		// calculate translation
+		pReuse[0] = 0;
+		pReuse[1] = 0;
+		transformation.transform(pReuse);
+		final float tX = pReuse[0];
+		final float tY = pReuse[1];
+
+		// calculate rotation
+		pReuse[0] = 1;
+		pReuse[1] = 0;
+		transformation.transform(pReuse);
+		final float rotX = pReuse[0] - tX;
+		final float rotY = pReuse[1] - tY;
+		final float rotation = MathConstants.RAD_TO_DEG * MathUtils.atan2(rotY, rotX);
+
+		return rotation;
+	}
+
 	public void placeTopOfAndCenter(IEntity pImmovable, IEntity pMovable) {
 		placeTopOfAndCenter(pImmovable, pMovable, 0, 0);
 	}

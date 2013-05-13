@@ -54,8 +54,9 @@ public class PositionerImmovableRelative extends BasePositioner {
 
 		TMP_ENTITY_MOVABLE[0] = !pMoveHorizontally ? 0 : TMP_ENTITY_MOVABLE[0] - TMP_ENTITY_ANCHORED[0];
 		TMP_ENTITY_MOVABLE[1] = !pMoveVertically ? 0 : TMP_ENTITY_MOVABLE[1] - TMP_ENTITY_ANCHORED[1];
-	
-		final float rotation = pImmovable.getLocalToSceneTransformation().getRotation();
+
+		final float rotation = -calculateRotation(pImmovable.getLocalToSceneTransformation(), TMP_ENTITY_ANCHORED);
+
 		MathUtils.rotateAroundCenter(TMP_ENTITY_MOVABLE, rotation, 0, 0);
 
 		pMovable.setPosition(pMovable.getX() - TMP_ENTITY_MOVABLE[0] + tX, pMovable.getY() - TMP_ENTITY_MOVABLE[1] + tY);
