@@ -9,8 +9,12 @@ import org.andengine.limbo.utils.positioner.PositionerSceneRelative;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
-
-
+/**
+ * (c) 2013 Michal Stawinski (nazgee)
+ *
+ * @author Michal Stawinski
+ * @since 20:31:01 - 13.05.2013
+ */
 public abstract class Swing<T> extends ClippingWindowContainer {
 	// ===========================================================
 	// Constants

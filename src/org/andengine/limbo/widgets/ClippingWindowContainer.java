@@ -9,6 +9,12 @@ import org.andengine.entity.IEntityComparator;
 import org.andengine.entity.IEntityMatcher;
 import org.andengine.entity.IEntityParameterCallable;
 
+/**
+ * (c) 2013 Michal Stawinski (nazgee)
+ *
+ * @author Michal Stawinski
+ * @since 20:31:01 - 13.05.2013
+ */
 public class ClippingWindowContainer extends ClippingWindow {
 	// ===========================================================
 	// Constants

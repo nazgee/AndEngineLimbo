@@ -11,8 +11,10 @@ import org.andengine.util.modifier.IModifier;
  * registering a new one, which helps to avoid silly situations where simillar
  * effect is applied mutliple times on a single entity.
  * 
- * @author Michal Stawinski (nazgee)
+ * (c) 2013 Michal Stawinski (nazgee)
  *
+ * @author Michal Stawinski
+ * @since 20:35:01 - 09.05.2013
  */
 public class EntityAnimator {
 	// ===========================================================

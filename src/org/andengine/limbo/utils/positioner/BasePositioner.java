@@ -8,7 +8,7 @@ import org.andengine.util.math.MathUtils;
  * (c) 2013 Michal Stawinski (nazgee)
  *
  * @author Michal Stawinski
- * @since 20:35:05 08 - 08.05.2013
+ * @since 20:35:05 - 08.05.2013
  */
 public abstract class BasePositioner {
 	// ===========================================================

@@ -7,7 +7,12 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.modifier.ease.IEaseFunction;
 
-
+/**
+ * (c) 2013 Michal Stawinski (nazgee)
+ *
+ * @author Michal Stawinski
+ * @since 20:31:01 - 13.05.2013
+ */
 public class SwingSpriteTextStacked extends SwingSpriteText {
 	// ===========================================================
 	// Constants

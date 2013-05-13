@@ -2,6 +2,12 @@ package org.andengine.limbo.widgets;
 
 import org.andengine.entity.clip.ClipEntity;
 
+/**
+ * (c) 2013 Michal Stawinski (nazgee)
+ *
+ * @author Michal Stawinski
+ * @since 20:31:01 - 13.05.2013
+ */
 public class ClippingWindow extends Window {
 	// ===========================================================
 	// Constants

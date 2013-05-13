@@ -11,6 +11,12 @@ import org.andengine.util.adt.list.SmartList;
 
 import android.util.SparseArray;
 
+/**
+ * (c) 2013 Michal Stawinski (nazgee)
+ *
+ * @author Michal Stawinski
+ * @since 20:31:01 - 13.05.2013
+ */
 public class Window extends Entity {
 	// ===========================================================
 	// Constants
