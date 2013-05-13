@@ -83,7 +83,7 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 
 	protected void animateIn(final float pTime, final IAnimatorListener pListener) {
 		final IEntity container = getContainer();
-		final float distance = calculateDistance(mAnimationOutDirection);
+		final float distance = calculateDistance(mAnimationInDirection);
 		position(container, mAnimationInDirection);
 		animate(container, mAnimationInDirection, distance, pTime, mEasingIn, pListener);
 	}
