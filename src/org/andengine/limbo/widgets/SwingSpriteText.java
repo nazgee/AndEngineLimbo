@@ -50,6 +50,10 @@ public class SwingSpriteText extends SwingSprite<CharSequence> {
 	public void updateValue(CharSequence pValue) {
 		this.mText.setText(pValue);
 	}
+
+	public Text getText() {
+		return this.mText;
+	}
 	// ===========================================================
 	// Methods
 	// ===========================================================
