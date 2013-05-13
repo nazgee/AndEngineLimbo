@@ -43,32 +43,32 @@ public class Window extends Entity {
 		this.mWindow = pWindow;
 		setSize(pWindow.getWidth(), pWindow.getHeight());
 		pWindow.setPosition(getWidth()/2, getHeight()/2);
-		super.attachChild(mWindow);
+		super.attachChild(this.mWindow);
 	}
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
 	public IEntity getWindow() {
-		return mWindow;
+		return this.mWindow;
 	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
 	public void setWidth(float pWidth) {
-		mWindow.setWidth(pWidth);
+		this.mWindow.setWidth(pWidth);
 		super.setWidth(pWidth);
 	}
 
 	@Override
 	public void setHeight(float pHeight) {
-		mWindow.setHeight(pHeight);
+		this.mWindow.setHeight(pHeight);
 		super.setHeight(pHeight);
 	}
 
 	@Override
 	public void setSize(float pWidth, float pHeight) {
-		mWindow.setSize(pWidth, pHeight);
+		this.mWindow.setSize(pWidth, pHeight);
 		super.setSize(pWidth, pHeight);
 	}
 

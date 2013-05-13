@@ -55,15 +55,15 @@ public class SwingSpriteTextStacked extends SwingSpriteText {
 			return;
 		} else {
 			super.setValue(pValue);
-			mStack.push(pValue);
+			this.mStack.push(pValue);
 		}
 	}
 
 	public void popValue() {
-		if (mStack.size() > 0) {
-			mStack.pop();
-			if (mStack.size() > 0) {
-				super.setValue(mStack.peek());
+		if (this.mStack.size() > 0) {
+			this.mStack.pop();
+			if (this.mStack.size() > 0) {
+				super.setValue(this.mStack.peek());
 			}
 		}
 	}

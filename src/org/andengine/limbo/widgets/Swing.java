@@ -54,11 +54,11 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	// Getter & Setter
 	// ===========================================================
 	public void setValue(T pValue) {
-		mPendingValue = pValue;
-		mValue = pValue;
+		this.mPendingValue = pValue;
+		this.mValue = pValue;
 	}
 	public T getValue() {
-		return mValue;
+		return this.mValue;
 	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -67,9 +67,9 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 
 	@Override
 	protected void onManagedUpdate(float pSecondsElapsed) {
-		if (mPendingValue != null && !isAnimating()) {
-			mAnimateOutListener.animationTime = mAnimatioTimeIn;
-			animateOut(mAnimatioTimeOut, mAnimateOutListener);
+		if (this.mPendingValue != null && !isAnimating()) {
+			this.mAnimateOutListener.mAnimationTimeIn = this.mAnimatioTimeIn;
+			animateOut(this.mAnimatioTimeOut, this.mAnimateOutListener);
 		}
 		super.onManagedUpdate(pSecondsElapsed);
 	}
@@ -80,16 +80,16 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 
 	protected void animateOut(final float pTime, final IAnimatorListener pListener) {
 		final IEntity container = getContainer();
-		final float distance = calculateDistance(mAnimationOutDirection);
+		final float distance = calculateDistance(this.mAnimationOutDirection);
 		PositionerSceneRelative.getInstance().center(getWindow(), container);
-		animate(container, mAnimationOutDirection, distance, pTime, mEasingOut, pListener);
+		animate(container, this.mAnimationOutDirection, distance, pTime, this.mEasingOut, pListener);
 	}
 
 	protected void animateIn(final float pTime, final IAnimatorListener pListener) {
 		final IEntity container = getContainer();
-		final float distance = calculateDistance(mAnimationInDirection);
-		position(container, mAnimationInDirection);
-		animate(container, mAnimationInDirection, distance, pTime, mEasingIn, pListener);
+		final float distance = calculateDistance(this.mAnimationInDirection);
+		position(container, this.mAnimationInDirection);
+		animate(container, this.mAnimationInDirection, distance, pTime, this.mEasingIn, pListener);
 	}
 
 	protected float calculateDistance(eAnimationDirection pAnimationDirection) {
@@ -101,7 +101,7 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	}
 
 	protected boolean isAnimating() {
-		return mContainerAnimator.isRunning();
+		return this.mContainerAnimator.isRunning();
 	}
 
 	protected void position(IEntity pEntity, eAnimationDirection pDirection) {
@@ -126,16 +126,16 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 		float y = pEntity.getY();
 		switch (pDirection) {
 		case UP:
-			mContainerAnimator.run(new MoveModifier(pTime , x, y, x, y + pDistance, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime , x, y, x, y + pDistance, pEasing), pListener);
 			break;
 		case DOWN:
-			mContainerAnimator.run(new MoveModifier(pTime, x, y, x, y - pDistance, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime, x, y, x, y - pDistance, pEasing), pListener);
 			break;
 		case LEFT:
-			mContainerAnimator.run(new MoveModifier(pTime, x, y, x - pDistance, y, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime, x, y, x - pDistance, y, pEasing), pListener);
 			break;
 		case RIGHT:
-			mContainerAnimator.run(new MoveModifier(pTime, x, y, x + pDistance, y, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime, x, y, x + pDistance, y, pEasing), pListener);
 			break;
 		}
 	}
@@ -148,22 +148,21 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 		public final boolean isHorizontal;
 		private eAnimationDirection(boolean pHorizontal) {
 			this.isHorizontal = pHorizontal;
-		
 		}
 	};
 
 	protected class AnimationOutListener implements IAnimatorListener {
-		public float animationTime;
-		private AnimationOutListener(float pAnimatioTime) {
-			this.animationTime = pAnimatioTime;
+		public float mAnimationTimeIn;
+		private AnimationOutListener(float pAnimatioTimeIn) {
+			this.mAnimationTimeIn = pAnimatioTimeIn;
 		}
 
 		@Override
 		public void onAnimatorFinished(EntityAnimator pAnimator) {
-			if (mPendingValue != null) {
-				updateValue(mPendingValue);
-				mPendingValue = null;
-				animateIn(animationTime, null);
+			if (Swing.this.mPendingValue != null) {
+				updateValue(Swing.this.mPendingValue);
+				Swing.this.mPendingValue = null;
+				animateIn(this.mAnimationTimeIn, null);
 			}
 		}
 	}

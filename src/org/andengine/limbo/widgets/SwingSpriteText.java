@@ -34,9 +34,9 @@ public class SwingSpriteText extends SwingSprite<CharSequence> {
 		super(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
 				pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn,
 				pEasingOut, pEasingIn, pVertexBufferObjectManager);
-		mText = new Text(0, 0, pFont, "123456789", pCharsCapacity, pVertexBufferObjectManager);
-		attachChild(mText);
-		PositionerSceneRelative.getInstance().center(getContainer(), mText);
+		this.mText = new Text(0, 0, pFont, "123456789", pCharsCapacity, pVertexBufferObjectManager);
+		attachChild(this.mText);
+		PositionerSceneRelative.getInstance().center(getContainer(), this.mText);
 	}
 
 	// ===========================================================
@@ -48,7 +48,7 @@ public class SwingSpriteText extends SwingSprite<CharSequence> {
 	// ===========================================================
 	@Override
 	public void updateValue(CharSequence pValue) {
-		mText.setText(pValue);
+		this.mText.setText(pValue);
 	}
 	// ===========================================================
 	// Methods

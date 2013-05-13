@@ -36,10 +36,10 @@ public abstract class SwingSprite<T> extends Swing<T> {
 		setPosition(pX, pY);
 
 		{
-			mFace = new NineSliceSprite(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom, pVertexBufferObjectManager, PositionColorTextureCoordinatesShaderProgram.getInstance());
-			getWindow().attachChild(mFace);
-			PositionerSceneRelative.getInstance().center(this, mFace);
-			mFace.setZIndex(ZINDEX_FACE);
+			this.mFace = new NineSliceSprite(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom, pVertexBufferObjectManager, PositionColorTextureCoordinatesShaderProgram.getInstance());
+			getWindow().attachChild(this.mFace);
+			PositionerSceneRelative.getInstance().center(this, this.mFace);
+			this.mFace.setZIndex(ZINDEX_FACE);
 		}
 
 		getWindow().sortChildren(false);
