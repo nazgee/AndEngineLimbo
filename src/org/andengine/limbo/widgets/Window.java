@@ -5,6 +5,7 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.ITouchArea;
+import org.andengine.entity.shape.IShape;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.Constants;
 import org.andengine.util.adt.list.SmartList;
@@ -50,6 +51,50 @@ public class Window extends Entity {
 	// ===========================================================
 	public IEntity getWindow() {
 		return this.mWindow;
+	}
+
+	public boolean isTouchAreaBindingOnActionDownEnabled() {
+		return this.mTouchAreaBindingOnActionDownEnabled;
+	}
+
+	public boolean isTouchAreaBindingOnActionMoveEnabled() {
+		return this.mTouchAreaBindingOnActionMoveEnabled;
+	}
+
+	/**
+	 * Enable or disable the binding of TouchAreas to PointerIDs (fingers).
+	 * When enabled: TouchAreas get bound to a PointerID (finger) when returning true in
+	 * {@link IShape#onAreaTouched(TouchEvent, float, float)} or
+	 * {@link IOnAreaTouchListener#onAreaTouched(TouchEvent, ITouchArea, float, float)}
+	 * with {@link TouchEvent#ACTION_DOWN}, they will receive all subsequent {@link TouchEvent}s
+	 * that are made with the same PointerID (finger)
+	 * <b>even if the {@link TouchEvent} is outside of the actual {@link ITouchArea}</b>!
+	 *
+	 * @param pTouchAreaBindingOnActionDownEnabled
+	 */
+	public void setTouchAreaBindingOnActionDownEnabled(final boolean pTouchAreaBindingOnActionDownEnabled) {
+		if (this.mTouchAreaBindingOnActionDownEnabled && !pTouchAreaBindingOnActionDownEnabled) {
+			this.mTouchAreaBindings.clear();
+		}
+		this.mTouchAreaBindingOnActionDownEnabled = pTouchAreaBindingOnActionDownEnabled;
+	}
+
+	/**
+	 * Enable or disable the binding of TouchAreas to PointerIDs (fingers).
+	 * When enabled: TouchAreas get bound to a PointerID (finger) when returning true in
+	 * {@link IShape#onAreaTouched(TouchEvent, float, float)} or
+	 * {@link IOnAreaTouchListener#onAreaTouched(TouchEvent, ITouchArea, float, float)}
+	 * with {@link TouchEvent#ACTION_MOVE}, they will receive all subsequent {@link TouchEvent}s
+	 * that are made with the same PointerID (finger)
+	 * <b>even if the {@link TouchEvent} is outside of the actual {@link ITouchArea}</b>!
+	 *
+	 * @param pTouchAreaBindingOnActionMoveEnabled
+	 */
+	public void setTouchAreaBindingOnActionMoveEnabled(final boolean pTouchAreaBindingOnActionMoveEnabled) {
+		if (this.mTouchAreaBindingOnActionMoveEnabled && !pTouchAreaBindingOnActionMoveEnabled) {
+			this.mTouchAreaBindings.clear();
+		}
+		this.mTouchAreaBindingOnActionMoveEnabled = pTouchAreaBindingOnActionMoveEnabled;
 	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces

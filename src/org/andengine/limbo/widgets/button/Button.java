@@ -10,8 +10,6 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.exception.AndEngineRuntimeException;
 
-import android.util.Log;
-
 /**
  * Heavily based on ButtonSprite from AndEngine core
  * 
