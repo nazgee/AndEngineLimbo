@@ -254,7 +254,14 @@ public class Window extends Entity {
 		}
 		/* If no area was touched, the Scene itself was touched as a fallback. */
 		if (this.mOnSceneTouchListener != null) {
-			final Boolean handled = this.mOnSceneTouchListener.onSceneTouchEvent(null, pSceneTouchEvent);
+			/* We're probably not the same size/position as real Scene was - hence the conversion */
+			final float[] touchAreaLocalCoordinates = convertSceneCoordinatesToLocalCoordinates(sceneTouchEventX, sceneTouchEventY);
+//			pSceneTouchEvent.set(touchAreaLocalCoordinates[Constants.VERTEX_INDEX_X], touchAreaLocalCoordinates[Constants.VERTEX_INDEX_Y]);
+
+			TouchEvent fakeEvent = TouchEvent.obtain(touchAreaLocalCoordinates[Constants.VERTEX_INDEX_X], touchAreaLocalCoordinates[Constants.VERTEX_INDEX_Y], pSceneTouchEvent.getAction(), pSceneTouchEvent.getPointerID(), pSceneTouchEvent.getMotionEvent());
+			final Boolean handled = this.mOnSceneTouchListener.onSceneTouchEvent(null, fakeEvent);
+			TouchEvent.recycle(fakeEvent);
+
 			if (handled != null && handled) {
 				/* If binding of ITouchAreas is enabled and this is an ACTION_DOWN event,
 				 * bind the active OnSceneTouchListener to the PointerID. */
