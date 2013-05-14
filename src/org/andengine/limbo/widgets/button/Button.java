@@ -181,7 +181,6 @@ public class Button extends Entity {
 			}
 		}
 
-		Log.e("aaa", "touched");
 		return true;
 	}
 
