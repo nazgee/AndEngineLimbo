@@ -44,7 +44,7 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public Swing(final float pX, final float pY, final float pWidth, final float pHeight, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
+	public Swing(final float pX, final float pY, final float pWidth, final float pHeight,
 			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, float pAnimationTimeOut, final float pAnimationTimeIn,
 			final IEaseFunction pEasingOut, final IEaseFunction pEasingIn, final VertexBufferObjectManager pVertexBufferObjectManager) {
 		super(pWidth, pHeight);

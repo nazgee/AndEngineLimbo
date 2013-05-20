@@ -34,7 +34,7 @@ public abstract class SwingSprite<T> extends Swing<T> {
 	public SwingSprite(final float pX, final float pY, final float pWidth, final float pHeight, final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
 			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, float pAnimationTimeOut, final float pAnimationTimeIn,
 			final IEaseFunction pEasingOut, final IEaseFunction pEasingIn, final VertexBufferObjectManager pVertexBufferObjectManager) {
-		super(pX, pY, pWidth, pHeight, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
+		super(pX, pY, pWidth, pHeight,
 				pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn,
 				pEasingOut, pEasingIn, pVertexBufferObjectManager);
 		setPosition(pX, pY);
