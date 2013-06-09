@@ -224,7 +224,7 @@ public abstract class BasePositioner {
 	}
 
 	public void alignBottomEdges(IEntity pImmovable, IEntity pMovable) {
-		alignTopEdges(pImmovable, pMovable, 0, 0);
+		alignBottomEdges(pImmovable, pMovable, 0, 0);
 	}
 	public void alignBottomEdges(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
 		placeVertical(pImmovable, pMovable, eAnchorPointsPair.IN_C_BTM.relation, tx, ty);
