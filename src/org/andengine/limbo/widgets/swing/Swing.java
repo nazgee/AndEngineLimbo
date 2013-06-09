@@ -123,8 +123,7 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 		animate(container, this.mAnimationInDirection, pTime, this.mEasingIn, pListener);
 	}
 
-	
-	protected boolean isAnimating() {
+	public boolean isAnimating() {
 		return this.mContainerAnimator.isRunning();
 	}
 
