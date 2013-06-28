@@ -12,4 +12,5 @@ gdbserver
 local.properties
 .settings
 .project
+.classpath
 AndEngineLiveWallpaperExtension.iml

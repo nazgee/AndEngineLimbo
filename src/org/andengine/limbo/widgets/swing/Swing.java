@@ -26,6 +26,7 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	// ===========================================================
 	// Constants
 	// ===========================================================
+
 	// ===========================================================
 	// Fields
 	// ===========================================================
@@ -33,12 +34,12 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	protected T mPendingValue;
 
 	private final EntityAnimator mContainerAnimator;
-	private final AnimationOutListener mAnimateOutListener = new AnimationOutListener(1);
+	private final AnimationOutListener mAnimateOutListener = new AnimationOutListener();
 
 	private final eAnimationDirection mAnimationOutDirection;
 	private final eAnimationDirection mAnimationInDirection;
-	private final float mAnimatioTimeIn;
-	private final float mAnimatioTimeOut;
+	private final float mAnimationTimeIn;
+	private final float mAnimationTimeOut;
 	private final IEaseFunction mEasingIn;
 	private final IEaseFunction mEasingOut;
 	// ===========================================================
@@ -54,8 +55,8 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 		this.mAnimationInDirection = pAnimationInDirection;
 		this.mEasingOut = pEasingOut;
 		this.mEasingIn = pEasingIn;
-		this.mAnimatioTimeIn = pAnimationTimeIn;
-		this.mAnimatioTimeOut = pAnimationTimeOut;
+		this.mAnimationTimeIn = pAnimationTimeIn;
+		this.mAnimationTimeOut = pAnimationTimeOut;
 		this.mContainerAnimator = new EntityAnimator(getContainer());
 	}
 
@@ -63,22 +64,57 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	// Getter & Setter
 	// ===========================================================
 	/**
-	 * Sets the value of a {@link Swing}. Appropriate animation will be triggered
+	 * Sets the value of a {@link Swing}. Appropriate (Exit+Enter) animation will be triggered
 	 * right after current (if any) animation finishes.
 	 * 
 	 * @param pValue
 	 */
 	public void setValue(T pValue) {
 		this.mPendingValue = pValue;
-		this.mValue = pValue;
 	}
 
 	/**
-	 * 
-	 * @return value set by last setValue() call
+	 * Sets the value of a {@link Swing} without any animation.
+	 * @param pValue
+	 */
+	public void setValueDirectly(T pValue) {
+		updateValue(pValue);
+		this.mValue = pValue;
+		this.mPendingValue = null;
+	}
+
+	/**
+	 * Sets the value of a {@link Swing} with Enter animation only. (Exit animation is skipped)
+	 * @param pValue
+	 */
+	public void setValueEnterAnimationOnly(T pValue) {
+		animateIn(this.mAnimationTimeIn, null);
+		setValueDirectly(pValue);
+	}
+
+	/**
+	 * Sets the value of a {@link Swing} with Exit animation only. (Enter animation is skipped)
+	 * @param pValue
+	 */
+	public void setValueExitAnimationOnly(T pValue) {
+		animateOut(this.mAnimationTimeOut, null);
+		setValueDirectly(pValue);
+	}
+
+	/**
+	 *
+	 * @return value set after last Enter animation
 	 */
 	public T getValue() {
 		return this.mValue;
+	}
+
+	/**
+	 *
+	 * @return value set after last setValue call
+	 */
+	public T getValueLatest() {
+		return this.mPendingValue != null ? this.mPendingValue : this.mValue;
 	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -88,8 +124,7 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	@Override
 	protected void onManagedUpdate(float pSecondsElapsed) {
 		if (this.mPendingValue != null && !isAnimating()) {
-			this.mAnimateOutListener.mAnimationTimeIn = this.mAnimatioTimeIn;
-			animateOut(this.mAnimatioTimeOut, this.mAnimateOutListener);
+			animateOut(this.mAnimationTimeOut, this.mAnimateOutListener);
 		}
 		super.onManagedUpdate(pSecondsElapsed);
 	}
@@ -104,10 +139,8 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	 * @param pListener
 	 */
 	protected void animateOut(final float pTime, final IAnimatorListener pListener) {
-		final IEntity container = getContainer();
-
-		container.setPosition(getWindow().getWidth()/2, getWindow().getHeight()/2);
-		animate(container, this.mAnimationOutDirection, pTime, this.mEasingOut, pListener);
+		positionForAnimationOut(getContainer());
+		animate(getContainer(), this.mAnimationOutDirection, pTime, this.mEasingOut, pListener);
 	}
 
 	/**
@@ -117,10 +150,8 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	 * @param pListener
 	 */
 	protected void animateIn(final float pTime, final IAnimatorListener pListener) {
-		final IEntity container = getContainer();
-
-		positionForAnimationIn(container, this.mAnimationInDirection);
-		animate(container, this.mAnimationInDirection, pTime, this.mEasingIn, pListener);
+		positionForAnimationIn(getContainer(), this.mAnimationInDirection);
+		animate(getContainer(), this.mAnimationInDirection, pTime, this.mEasingIn, pListener);
 	}
 
 	public boolean isAnimating() {
@@ -128,22 +159,22 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	}
 
 	private void animate(IEntity pEntity, eAnimationDirection pDirection, final float pTime, IEaseFunction pEasing, IAnimatorListener pListener) {
-		final float x = pEntity.getX();
-		final float y = pEntity.getY();
+		final float fromX = pEntity.getX();
+		final float fromY = pEntity.getY();
 		final float distance = calculateDistance(pDirection);
 
 		switch (pDirection) {
 		case UP:
-			this.mContainerAnimator.run(new MoveModifier(pTime , x, y, x, y + distance, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime , fromX, fromY, fromX, fromY + distance, pEasing), pListener);
 			break;
 		case DOWN:
-			this.mContainerAnimator.run(new MoveModifier(pTime, x, y, x, y - distance, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime, fromX, fromY, fromX, fromY - distance, pEasing), pListener);
 			break;
 		case LEFT:
-			this.mContainerAnimator.run(new MoveModifier(pTime, x, y, x - distance, y, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime, fromX, fromY, fromX - distance, fromY, pEasing), pListener);
 			break;
 		case RIGHT:
-			this.mContainerAnimator.run(new MoveModifier(pTime, x, y, x + distance, y, pEasing), pListener);
+			this.mContainerAnimator.run(new MoveModifier(pTime, fromX, fromY, fromX + distance, fromY, pEasing), pListener);
 			break;
 		}
 	}
@@ -154,6 +185,10 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 		} else {
 			return getWindow().getHeight()/2 + getContainer().getHeight()/2;
 		}
+	}
+
+	private void positionForAnimationOut(final IEntity container) {
+		container.setPosition(getWindow().getWidth()/2, getWindow().getHeight()/2);
 	}
 
 	private void positionForAnimationIn(IEntity pEntity, eAnimationDirection pDirection) {
@@ -178,9 +213,6 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	// ===========================================================
 	/**
 	 * Animation directions supported {@link Swing}
-	 * 
-	 * @author nazgee
-	 *
 	 */
 	public static enum eAnimationDirection {
 		UP(false),
@@ -197,21 +229,14 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	/**
 	 * Helper with a sole purpose of starting "in" animation
 	 * when current ("out") animation is completed.
-	 * 
-	 * @author nazgee
 	 */
 	protected class AnimationOutListener implements IAnimatorListener {
-		public float mAnimationTimeIn;
-		private AnimationOutListener(float pAnimatioTimeIn) {
-			this.mAnimationTimeIn = pAnimatioTimeIn;
-		}
 
 		@Override
 		public void onAnimatorFinished(EntityAnimator pAnimator) {
 			if (Swing.this.mPendingValue != null) {
-				updateValue(Swing.this.mPendingValue);
-				Swing.this.mPendingValue = null;
-				animateIn(this.mAnimationTimeIn, null);
+				setValueDirectly(Swing.this.mPendingValue);
+				animateIn(Swing.this.mAnimationTimeIn, null);
 			}
 		}
 	}
