@@ -99,11 +99,7 @@ public class Button extends Entity {
 		this.mEntities[State.PRESSED.getEntityIndex()] = pPressed;
 		this.mEntities[State.DISABLED.getEntityIndex()] = pDisabled;
 
-		for (IEntity entity : this.mEntities) {
-			if (entity != null) {
-				entity.setPosition(pWidth/2, pHeight/2);
-			}
-		}
+		centerEntities(pWidth, pHeight);
 
 		attachDefaultFace();
 		this.mState = State.NORMAL;
@@ -111,6 +107,14 @@ public class Button extends Entity {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+
+	protected void centerEntities(final float pWidth, final float pHeight) {
+		for (IEntity entity : this.mEntities) {
+			if (entity != null) {
+				entity.setPosition(pWidth/2, pHeight/2);
+			}
+		}
+	}
 
 	public boolean isEnabled() {
 		return this.mEnabled;
