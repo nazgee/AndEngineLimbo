@@ -207,6 +207,7 @@ public class Button extends Entity {
 		this.mState = pState;
 
 		detachChild(pOldFace);
+		detachChild(pNewFace);
 		if (pNewFace == null) {
 			attachDefaultFace();
 			Debug.w(this.getClass().getSimpleName() + " changed its " + State.class.getSimpleName() + " to " + pState.toString() + ", which doesn't have an " + IEntity.class.getSimpleName() + " supplied. Applying default " + IEntity.class.getSimpleName() + ".");
