@@ -108,6 +108,10 @@ public class Button extends Entity {
 	// Getter & Setter
 	// ===========================================================
 
+	public IEntity getFace(State pState) {
+		return this.mEntities[pState.getEntityIndex()];
+	}
+
 	protected void centerEntities(final float pWidth, final float pHeight) {
 		for (IEntity entity : this.mEntities) {
 			if (entity != null) {
