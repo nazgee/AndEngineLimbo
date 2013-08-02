@@ -88,8 +88,12 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	 * @param pValue
 	 */
 	public void setValueEnterAnimationOnly(T pValue) {
-		animateIn(this.mAnimationTimeIn, null);
+		animateIn();
 		setValueDirectly(pValue);
+	}
+
+	public void animateIn() {
+		animateIn(this.mAnimationTimeIn, null);
 	}
 
 	/**
@@ -97,8 +101,12 @@ public abstract class Swing<T> extends ClippingWindowContainer {
 	 * @param pValue
 	 */
 	public void setValueExitAnimationOnly(T pValue) {
-		animateOut(this.mAnimationTimeOut, null);
+		animateOut();
 		setValueDirectly(pValue);
+	}
+
+	public void animateOut() {
+		animateOut(this.mAnimationTimeOut, null);
 	}
 
 	/**
