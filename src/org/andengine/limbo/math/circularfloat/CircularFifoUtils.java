@@ -18,4 +18,32 @@ public class CircularFifoUtils {
 		}
 		return sum;
 	}
+
+	public static final long avgLong(CircularFifoBuffer pBuffer) {
+		return sumLong(pBuffer) / pBuffer.size();
+	}
+
+	public static final long sumLong(CircularFifoBuffer pBuffer) {
+		long sum = 0;
+
+		for (sIterator.reinitialize(pBuffer); sIterator.hasNext();) {
+			final Long val = (Long) sIterator.next();
+			sum += val;
+		}
+		return sum;
+	}
+
+	public static final int avgInteger(CircularFifoBuffer pBuffer) {
+		return sumInteger(pBuffer) / pBuffer.size();
+	}
+
+	public static final int sumInteger(CircularFifoBuffer pBuffer) {
+		int sum = 0;
+
+		for (sIterator.reinitialize(pBuffer); sIterator.hasNext();) {
+			final Integer val = (Integer) sIterator.next();
+			sum += val;
+		}
+		return sum;
+	}
 }
