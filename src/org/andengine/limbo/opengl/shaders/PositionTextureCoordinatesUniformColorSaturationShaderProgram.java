@@ -74,13 +74,6 @@ public class PositionTextureCoordinatesUniformColorSaturationShaderProgram exten
 	// Getter & Setter
 	// ===========================================================
 
-	public float getSaturation() {
-		return mSaturation;
-	}
-
-	public void setSaturation(float mSaturation) {
-		this.mSaturation = mSaturation;
-	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
