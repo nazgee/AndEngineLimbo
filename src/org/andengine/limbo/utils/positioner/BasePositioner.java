@@ -150,14 +150,14 @@ public abstract class BasePositioner {
 		centerOnHorizontalAxes(pImmovable, pMovable, 0, 0);
 	}
 	public void centerOnHorizontalAxes(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
-		placeVertical(pImmovable, pMovable, eAnchorPointsPair.IN_C_CNT.relation, tx, ty);
+		placeHorizontal(pImmovable, pMovable, eAnchorPointsPair.IN_C_CNT.relation, tx, ty);
 	}
 
 	public void centerOnVerticalAxes(IEntity pImmovable, IEntity pMovable) {
 		centerOnVerticalAxes(pImmovable, pMovable, 0, 0);
 	}
 	public void centerOnVerticalAxes(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
-		placeHorizontal(pImmovable, pMovable, eAnchorPointsPair.IN_C_CNT.relation, tx, ty);
+		placeVertical(pImmovable, pMovable, eAnchorPointsPair.IN_C_CNT.relation, tx, ty);
 	}
 
 	public void center(IEntity pImmovable, IEntity pMovable) {
