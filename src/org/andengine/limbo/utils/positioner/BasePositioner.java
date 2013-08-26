@@ -62,6 +62,13 @@ public abstract class BasePositioner {
 		return rotation;
 	}
 
+	public void placeTopOf(IEntity pImmovable, IEntity pMovable) {
+		placeTopOf(pImmovable, pMovable, 0, 0);
+	}
+	public void placeTopOf(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		placeVertical(pImmovable, pMovable, eAnchorPointsPair.VER_TOP_C.relation, tx, ty);
+	}
+
 	public void placeTopOfAndCenter(IEntity pImmovable, IEntity pMovable) {
 		placeTopOfAndCenter(pImmovable, pMovable, 0, 0);
 	}
@@ -81,6 +88,13 @@ public abstract class BasePositioner {
 	}
 	public void placeTopOfRightsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
 		place(pImmovable, pMovable, eAnchorPointsPair.VER_TOP_R.relation, tx, ty);
+	}
+
+	public void placeBelowOf(IEntity pImmovable, IEntity pMovable) {
+		placeTopOf(pImmovable, pMovable, 0, 0);
+	}
+	public void placeBelowOf(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		placeVertical(pImmovable, pMovable, eAnchorPointsPair.VER_BTM_C.relation, tx, ty);
 	}
 
 	public void placeBelowOfAndCenter(IEntity pImmovable, IEntity pMovable) {
