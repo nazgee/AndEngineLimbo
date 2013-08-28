@@ -108,6 +108,15 @@ public class Button extends Entity {
 	// Getter & Setter
 	// ===========================================================
 
+	public void setFaceSize(final float pWidth, final float pHeight) {
+		for (IEntity pEntity : this.mEntities) {
+			if (pEntity != null) {
+				pEntity.setSize(pWidth, pHeight);
+				pEntity.setPosition(pWidth/2, pHeight/2);
+			}
+		}
+	}
+
 	public IEntity getFace(State pState) {
 		return this.mEntities[pState.getEntityIndex()];
 	}
