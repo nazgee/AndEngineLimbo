@@ -34,6 +34,7 @@ public class Button extends Entity {
 	private OnClickListener mOnClickDownListener;
 	private boolean mEnabled = true;
 	private State mState;
+	private boolean mIsBistable = false;
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -107,6 +108,13 @@ public class Button extends Entity {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	public void setBistable(final boolean pIsBistable) {
+		this.mIsBistable = pIsBistable;
+	}
+
+	public boolean isBistable() {
+		return this.mIsBistable;
+	}
 
 	public void setFaceSize(final float pWidth, final float pHeight) {
 		for (IEntity pEntity : this.mEntities) {
@@ -181,22 +189,36 @@ public class Button extends Entity {
 		if (!this.isEnabled()) {
 			this.changeState(State.DISABLED);
 		} else if (pSceneTouchEvent.isActionDown()) {
-			this.changeState(State.PRESSED);
-
-			if (this.mOnClickDownListener != null) {
-				this.mOnClickDownListener.onClick(this, pTouchAreaLocalX, pTouchAreaLocalY);
+			if (this.mState != State.PRESSED) {
+				doPressedDown(pTouchAreaLocalX, pTouchAreaLocalY);
+			} else {
+				doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
 			}
 		} else if (pSceneTouchEvent.isActionCancel() || !this.contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
 			this.changeState(State.NORMAL);
-		} else if (pSceneTouchEvent.isActionUp() && this.mState == State.PRESSED) {
-			this.changeState(State.NORMAL);
-
-			if (this.mOnClickUpListener != null) {
-				this.mOnClickUpListener.onClick(this, pTouchAreaLocalX, pTouchAreaLocalY);
-			}
+		} else if (pSceneTouchEvent.isActionUp() && this.mState == State.PRESSED && !this.mIsBistable) {
+			doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
 		}
 
 		return true;
+	}
+
+	private void doUnpressed(final float pTouchAreaLocalX,
+			final float pTouchAreaLocalY) {
+		this.changeState(State.NORMAL);
+
+		if (this.mOnClickUpListener != null) {
+			this.mOnClickUpListener.onClick(this, pTouchAreaLocalX, pTouchAreaLocalY);
+		}
+	}
+
+	private void doPressedDown(final float pTouchAreaLocalX,
+			final float pTouchAreaLocalY) {
+		this.changeState(State.PRESSED);
+
+		if (this.mOnClickDownListener != null) {
+			this.mOnClickDownListener.onClick(this, pTouchAreaLocalX, pTouchAreaLocalY);
+		}
 	}
 
 	@Override
