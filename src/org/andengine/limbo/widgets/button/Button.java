@@ -232,7 +232,7 @@ public class Button extends Entity {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	private void changeState(final State pState) {
+	public void changeState(final State pState) {
 		if (pState == this.mState) {
 			return;
 		}
