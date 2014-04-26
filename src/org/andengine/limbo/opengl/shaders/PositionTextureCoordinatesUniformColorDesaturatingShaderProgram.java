@@ -15,13 +15,13 @@ import android.opengl.GLES20;
  * @author Michal Stawinski <michal.stawinski@gmail.com>
  * @since 19:20:20 - 30.05.2013
  */
-public class PositionTextureCoordinatesUniformColorSaturationShaderProgram extends ShaderProgram {
+public class PositionTextureCoordinatesUniformColorDesaturatingShaderProgram extends ShaderProgram {
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
 	private static final String UNIFORM_SATURATION = "u_saturation";
-	private static PositionTextureCoordinatesUniformColorSaturationShaderProgram INSTANCE;
+	private static PositionTextureCoordinatesUniformColorDesaturatingShaderProgram INSTANCE;
 
 	public static final String VERTEXSHADER =
 			"uniform mat4 " + ShaderProgramConstants.UNIFORM_MODELVIEWPROJECTIONMATRIX + ";\n" +
@@ -40,9 +40,8 @@ public class PositionTextureCoordinatesUniformColorSaturationShaderProgram exten
 			"uniform float " + UNIFORM_SATURATION + ";\n" +
 			"varying mediump vec2 " + ShaderProgramConstants.VARYING_TEXTURECOORDINATES + ";\n" +
 			"void main() {\n" +
-			"	vec4 colorized = " + ShaderProgramConstants.UNIFORM_COLOR + " * texture2D(" + ShaderProgramConstants.UNIFORM_TEXTURE_0 + ", " + ShaderProgramConstants.VARYING_TEXTURECOORDINATES + ");\n" +
 			"	vec4 gray = vec4(vec3(dot(colorized.rgb, vec3(.222, .707, .071)) ), colorized.a);\n" +
-			"	gl_FragColor = mix(gray, colorized, " + UNIFORM_SATURATION + ");\n" +
+			"	gl_FragColor = gray;\n" +
 			"}";
 
 	// ===========================================================
@@ -57,15 +56,15 @@ public class PositionTextureCoordinatesUniformColorSaturationShaderProgram exten
 	// Constructors
 	// ===========================================================
 
-	private PositionTextureCoordinatesUniformColorSaturationShaderProgram() {
-		super(PositionTextureCoordinatesUniformColorSaturationShaderProgram.VERTEXSHADER, PositionTextureCoordinatesUniformColorSaturationShaderProgram.FRAGMENTSHADER);
+	private PositionTextureCoordinatesUniformColorDesaturatingShaderProgram() {
+		super(PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.VERTEXSHADER, PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.FRAGMENTSHADER);
 	}
 
-	public static PositionTextureCoordinatesUniformColorSaturationShaderProgram getInstance() {
-		if (PositionTextureCoordinatesUniformColorSaturationShaderProgram.INSTANCE == null) {
-			PositionTextureCoordinatesUniformColorSaturationShaderProgram.INSTANCE = new PositionTextureCoordinatesUniformColorSaturationShaderProgram();
+	public static PositionTextureCoordinatesUniformColorDesaturatingShaderProgram getInstance() {
+		if (PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.INSTANCE == null) {
+			PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.INSTANCE = new PositionTextureCoordinatesUniformColorDesaturatingShaderProgram();
 		}
-		return PositionTextureCoordinatesUniformColorSaturationShaderProgram.INSTANCE;
+		return PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.INSTANCE;
 	}
 
 	// ===========================================================
@@ -83,10 +82,10 @@ public class PositionTextureCoordinatesUniformColorSaturationShaderProgram exten
 
 		super.link(pGLState);
 
-		PositionTextureCoordinatesUniformColorSaturationShaderProgram.sUniformModelViewPositionMatrixLocation = this.getUniformLocation(ShaderProgramConstants.UNIFORM_MODELVIEWPROJECTIONMATRIX);
-		PositionTextureCoordinatesUniformColorSaturationShaderProgram.sUniformTexture0Location = this.getUniformLocation(ShaderProgramConstants.UNIFORM_TEXTURE_0);
+		PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.sUniformModelViewPositionMatrixLocation = this.getUniformLocation(ShaderProgramConstants.UNIFORM_MODELVIEWPROJECTIONMATRIX);
+		PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.sUniformTexture0Location = this.getUniformLocation(ShaderProgramConstants.UNIFORM_TEXTURE_0);
 		PositionTextureCoordinatesUniformColorShaderProgram.sUniformColorLocation = this.getUniformLocation(ShaderProgramConstants.UNIFORM_COLOR);
-		PositionTextureCoordinatesUniformColorSaturationShaderProgram.sUniformSaturationLocation = this.getUniformLocation(UNIFORM_SATURATION);
+		PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.sUniformSaturationLocation = this.getUniformLocation(UNIFORM_SATURATION);
 	}
 
 	@Override
@@ -95,8 +94,8 @@ public class PositionTextureCoordinatesUniformColorSaturationShaderProgram exten
 
 		super.bind(pGLState, pVertexBufferObjectAttributes);
 
-		GLES20.glUniformMatrix4fv(PositionTextureCoordinatesUniformColorSaturationShaderProgram.sUniformModelViewPositionMatrixLocation, 1, false, pGLState.getModelViewProjectionGLMatrix(), 0);
-		GLES20.glUniform1i(PositionTextureCoordinatesUniformColorSaturationShaderProgram.sUniformTexture0Location, 0);
+		GLES20.glUniformMatrix4fv(PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.sUniformModelViewPositionMatrixLocation, 1, false, pGLState.getModelViewProjectionGLMatrix(), 0);
+		GLES20.glUniform1i(PositionTextureCoordinatesUniformColorDesaturatingShaderProgram.sUniformTexture0Location, 0);
 	}
 
 	@Override

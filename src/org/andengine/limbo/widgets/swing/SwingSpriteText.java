@@ -30,10 +30,17 @@ public class SwingSpriteText extends SwingSprite<CharSequence> {
 	// ===========================================================
 	public SwingSpriteText(final float pX, final float pY, final float pWidth, final float pHeight, final Font pFont, int pCharsCapacity,
 			final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
-			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, final float pAnimationTimeOut, final float pAnimationTimeIn, 
+			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, final float pAnimationTimeOut, final float pAnimationTimeIn,
+			final IEaseFunction pEasingOut, final IEaseFunction pEasingIn, final VertexBufferObjectManager pVertexBufferObjectManager) {
+		this(pX, pY, pWidth, pHeight, pFont, pCharsCapacity, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom, pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn, 1, pEasingOut, pEasingIn, pVertexBufferObjectManager);
+	}
+
+	public SwingSpriteText(final float pX, final float pY, final float pWidth, final float pHeight, final Font pFont, int pCharsCapacity,
+			final ITextureRegion pTextureRegion, final float pInsetLeft, final float pInsetTop, final float pInsetRight, final float pInsetBottom,
+			eAnimationDirection pAnimationOutDirection, eAnimationDirection pAnimationInDirection, final float pAnimationTimeOut, final float pAnimationTimeIn,  int pZindexWindow,
 			final IEaseFunction pEasingOut, final IEaseFunction pEasingIn, final VertexBufferObjectManager pVertexBufferObjectManager) {
 		super(pX, pY, pWidth, pHeight, pTextureRegion, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom,
-				pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn,
+				pAnimationOutDirection, pAnimationInDirection, pAnimationTimeOut, pAnimationTimeIn, pZindexWindow,
 				pEasingOut, pEasingIn, pVertexBufferObjectManager);
 		this.mText = new Text(0, 0, pFont, "123456789", pCharsCapacity, pVertexBufferObjectManager);
 		attachChild(this.mText);

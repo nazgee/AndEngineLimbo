@@ -59,6 +59,9 @@ public class Button extends Entity {
 				pDisabled == null ? null : new NineSliceSprite(0, 0, pFaceWidth, pFaceHeight, pDisabled, pInsetLeft, pInsetTop, pInsetRight, pInsetBottom, pVBOM));
 	}
 
+	public Button(final float pWidth, final float pHeight, final ITextureRegion pNormal, final ITextureRegion pPressed, final ITextureRegion pDisabled, VertexBufferObjectManager pVBOM) {
+		this(pWidth, pHeight, pNormal.getWidth(), pNormal.getHeight(), pNormal, pPressed, pDisabled, pVBOM);
+	}
 	/**
 	 * Creates a button using provided ITextureRegions to create Sprites for faces representing Button states
 	 * 

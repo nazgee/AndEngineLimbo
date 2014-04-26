@@ -60,6 +60,7 @@ public abstract class BasePositioner {
 		final float rotation = MathConstants.RAD_TO_DEG * MathUtils.atan2(rotY, rotX);
 
 		return rotation;
+//		return transformation.getRotation();
 	}
 
 	public void placeTopOf(IEntity pImmovable, IEntity pMovable) {
