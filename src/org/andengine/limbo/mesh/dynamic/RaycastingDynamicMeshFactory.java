@@ -44,24 +44,8 @@ public class RaycastingDynamicMeshFactory {
 
 		xyProvider.setPhysicsWorld(pWorld);
 		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProviderMesh, uvMapper, DrawMode.TRIANGLE_FAN,
-				pTexture, vbo, DrawType.DYNAMIC);
+				pTexture, vbo, DrawType.STREAM);
 		return mesh;
-
-//		XYProviderFanBase xyProvider = new XYProviderFanBase(16, true) {
-//		static final float RADIUS=100;
-//		@Override
-//		protected float getVertexY(int i) {
-//			float rad = ((float)i) / (float)mVertexCount * (float)Math.PI * 2.0f;
-//			return (float) Math.sin(rad) * RADIUS;
-//		}
-//		
-//		@Override
-//		protected float getVertexX(int i) {
-//			float rad = ((float)i) / (float)mVertexCount * (float)Math.PI * 2.0f;
-//			return (float) Math.cos(rad) * RADIUS;
-//		}
-//	};
-
 	}
 	// ===========================================================
 	// Getter & Setter
