@@ -1,8 +1,9 @@
-package org.andengine.limbo.mesh.xy;
+package org.andengine.limbo.mesh;
+
+import org.andengine.opengl.texture.region.ITextureRegion;
 
 
-
-public abstract class DynamicXYProviderFan extends DynamicXYProvider {
+abstract public class UVMapper implements IUVMapper {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -10,66 +11,47 @@ public abstract class DynamicXYProviderFan extends DynamicXYProvider {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private final boolean mForceFanClosure;
-	protected float mHubX = 0;
-	protected float mHubY = 0;
+	protected final ITextureRegion mTextureRegion;
+	protected final IXYProvider mVertexProvider;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicXYProviderFan(int pVertexCount) {
-		this(pVertexCount, false);
+	public UVMapper(ITextureRegion pTextureRegion, IXYProvider pVertexProviderFan) {
+		this.mTextureRegion = pTextureRegion;
+		this.mVertexProvider = pVertexProviderFan;
 	}
 
-	public DynamicXYProviderFan(int pVertexCount, boolean pForceFanClosure) {
-		super(pVertexCount);
-		this.mForceFanClosure = pForceFanClosure;
-	}
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-	@Override
-	public int getVertexCount() {
-		// hub + vertices + closure
-		return 1 + mVertexCount + (mForceFanClosure ? 1 : 0);
-	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
-	public float getX(int i) {
-		if (i == 0) {
-			return mHubX;
-		} else {
-			return getBorderVertexX(indexToVertex(i));
-		}
+	public int getVertexCount() {
+		return mVertexProvider.getVertexCount();
 	}
 
 	@Override
-	public float getY(int i) {
-		if (i == 0) {
-			return mHubY;
-		} else {
-			return getBorderVertexY(indexToVertex(i));
-		}
+	public float getV(int i) {
+		return calculateV(mVertexProvider.getY(i));
+	}
+
+	@Override
+	public float getU(int i) {
+		return calculateU(mVertexProvider.getX(i));
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	abstract protected float getBorderVertexX(int i);
-	abstract protected float getBorderVertexY(int i);
-
-	protected int indexToVertex(int i) {
-		if (i <= 0) {
-			throw new RuntimeException("bad vertex index (" + i + ")");
-		}
-
-		return ((i-1) % mVertexCount);
-	}
+	abstract protected float calculateU(float pX);
+	abstract protected float calculateV(float pY);
 
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
+
 }

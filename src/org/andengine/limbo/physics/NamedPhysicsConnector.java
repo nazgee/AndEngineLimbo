@@ -38,6 +38,10 @@ public class NamedPhysicsConnector extends PhysicsConnector {
 		return mName;
 	}
 
+	public float getPixelToMeterRatio() {
+		return mPixelToMeterRatio;
+	}
+
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================

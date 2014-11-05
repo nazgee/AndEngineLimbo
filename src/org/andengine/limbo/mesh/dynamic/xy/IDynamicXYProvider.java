@@ -1,8 +1,9 @@
-package org.andengine.limbo.mesh.uv;
+package org.andengine.limbo.mesh.dynamic.xy;
 
-import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.limbo.mesh.IXYProvider;
 
-public final class UVMapperUtils {
+public interface IDynamicXYProvider extends IXYProvider, IUpdateHandler{
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -26,31 +27,18 @@ public final class UVMapperUtils {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	private static float mapVToRegionImpl(ITextureRegion region, float v) {
-		float regionV1 = region.getV();
-		float regionV2 = region.getV2();
-		return regionV1 + v * (regionV2 - regionV1);
-	}
+	boolean isDirty();
+	void setDirty(boolean pDirty);
 
-	private static float mapUToRegionImpl(ITextureRegion region, float u) {
-		float regionU1 = region.getU();
-		float regionU2 = region.getU2();
-		return regionU1 + u * (regionU2 - regionU1);
-	}
+	void setScale(float pScale);
+	float getScale();
 
-	public static float mapUToRegion(ITextureRegion region, float u) {
-		if (region.isRotated())
-			return UVMapperUtils.mapVToRegionImpl(region, u);
-		else
-			return UVMapperUtils.mapUToRegionImpl(region, u);
-	}
+	void setOrigin(float pX, float pY);
+	float getOriginX();
+	float getOriginY();
 
-	public static float mapVToRegion(ITextureRegion region, float v) {
-		if (region.isRotated())
-			return UVMapperUtils.mapUToRegionImpl(region, v);
-		else
-			return UVMapperUtils.mapVToRegionImpl(region, v);
-	}
+	void setRotation(float pRotation);
+	float getRotation();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

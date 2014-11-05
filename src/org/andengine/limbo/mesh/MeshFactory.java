@@ -1,23 +1,18 @@
-package org.andengine.limbo.mesh.dynamic;
+package org.andengine.limbo.mesh;
 
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
-import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.limbo.mesh.dynamic.textured.DynamicTexturedMesh;
-import org.andengine.limbo.mesh.uv.DynamicUVMapperCutout;
-import org.andengine.limbo.mesh.xy.DynamicMeshXYProviderProxyScaling;
-import org.andengine.limbo.mesh.xy.DynamicXYProviderFanRaycasting;
-import org.andengine.limbo.mesh.xy.IDynamicMeshXYProvider;
-import org.andengine.limbo.mesh.xy.IDynamicXYProvider;
+import org.andengine.limbo.mesh.dynamic.uv.DynamicUVMapperCutout;
+import org.andengine.limbo.mesh.dynamic.xy.DynamicXYProviderFanRaycasting;
 import org.andengine.limbo.physics.raycast.RaycastListener;
 import org.andengine.limbo.physics.raycast.initializer.RadialRaysInitializer;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.math.MathUtils;
 
 
-public class RaycastingDynamicMeshFactory {
+public class MeshFactory {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -35,16 +30,25 @@ public class RaycastingDynamicMeshFactory {
 		return createPointLight(pTexture, pRadius, scaleU, scaleV, pRaysStep, pRaysCount, pPixelToMeter, pWorld, vbo);
 	}
 
-	public static DynamicTexturedMesh createPointLight(ITextureRegion pTexture, float pRadius, float pScaleU, float pScaleV, int pRaysStep, int pRaysCount, float pPixelToMeter, final PhysicsWorld pWorld, VertexBufferObjectManager vbo) {
+	public static DynamicTexturedMesh createPointLight(ITextureRegion pTexture, float pRadius, float pScaleU, float pScaleV, int pRaysStep, int pRaysCount, final float pPixelToMeter, final PhysicsWorld pWorld, VertexBufferObjectManager vbo) {
 
 		final RadialRaysInitializer raysInitializer = new RadialRaysInitializer(pRadius/pPixelToMeter, pRaysStep, pRaysCount);
-		final DynamicXYProviderFanRaycasting xyProvider = new DynamicXYProviderFanRaycasting(raysInitializer, new RaycastListener());
-		final IDynamicMeshXYProvider xyProviderMesh = new DynamicMeshXYProviderProxyScaling(xyProvider, PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-		final DynamicUVMapperCutout uvMapper = new DynamicUVMapperCutout(pTexture, xyProviderMesh, pScaleU, pScaleV, 0.5f, 0.5f);
+		final DynamicXYProviderFanRaycasting xyProvider = new DynamicXYProviderFanRaycasting(raysInitializer, new RaycastListener(), pPixelToMeter);
+		final DynamicUVMapperCutout uvMapper = new DynamicUVMapperCutout(pTexture, xyProvider, pScaleU, pScaleV, 0.5f, 0.5f);
 
 		xyProvider.setPhysicsWorld(pWorld);
-		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProviderMesh, uvMapper, DrawMode.TRIANGLE_FAN,
-				pTexture, vbo, DrawType.STREAM);
+		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProvider, uvMapper, DrawMode.TRIANGLE_FAN, pTexture, vbo, DrawType.STREAM) {
+
+			@Override
+			protected void onManagedUpdate(float pSecondsElapsed) {
+				this.xyProvider.setScale(getScaleX());
+				this.xyProvider.setOrigin(getX(), getY());
+				this.xyProvider.setRotation(getRotation());
+
+				super.onManagedUpdate(pSecondsElapsed);
+			}
+			
+		};
 		return mesh;
 	}
 	// ===========================================================

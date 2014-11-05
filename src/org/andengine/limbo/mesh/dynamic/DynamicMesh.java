@@ -3,7 +3,7 @@ package org.andengine.limbo.mesh.dynamic;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.entity.primitive.Mesh;
 import org.andengine.entity.primitive.vbo.IMeshVertexBufferObject;
-import org.andengine.limbo.mesh.xy.IDynamicMeshXYProvider;
+import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
@@ -17,12 +17,12 @@ public class DynamicMesh extends Mesh {
 	// Fields
 	// ===========================================================
 
-	public IDynamicMeshXYProvider xyProvider;
+	public IDynamicXYProvider xyProvider;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicMesh(final float pX, final float pY, final IDynamicMeshXYProvider pXYProvider,
+	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
 			final DrawMode pDrawMode, final VertexBufferObjectManager pVertexBufferObjectManager,
 			final DrawType pDrawType) {
 		this(pX, pY, pXYProvider, pDrawMode,
@@ -32,7 +32,7 @@ public class DynamicMesh extends Mesh {
 				);
 	}
 
-	public DynamicMesh(final float pX, final float pY, final IDynamicMeshXYProvider pXYProvider,
+	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
 			final DrawMode pDrawMode, final IMeshVertexBufferObject pMeshVertexBufferObject) {
 		super(pX, pY, 0, 0, pXYProvider.getVertexCount(), pDrawMode, pMeshVertexBufferObject);
 
@@ -64,7 +64,6 @@ public class DynamicMesh extends Mesh {
 	}
 
 	protected void updateDynamics(float pSecondsElapsed) {
-		xyProvider.setMesh(this);
 		xyProvider.onUpdate(pSecondsElapsed);
 
 		if (xyProvider.isDirty()) {

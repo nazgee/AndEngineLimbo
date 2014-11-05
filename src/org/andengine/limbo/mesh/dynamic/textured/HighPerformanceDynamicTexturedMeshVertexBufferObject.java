@@ -1,9 +1,9 @@
 package org.andengine.limbo.mesh.dynamic.textured;
 
 import org.andengine.entity.primitive.Mesh;
+import org.andengine.limbo.mesh.IUVMapper;
+import org.andengine.limbo.mesh.IXYProvider;
 import org.andengine.limbo.mesh.dynamic.HighPerformanceDynamicMeshVertexBufferObject;
-import org.andengine.limbo.mesh.uv.IUVMapper;
-import org.andengine.limbo.mesh.xy.IXYProvider;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.attribute.VertexBufferObjectAttributes;

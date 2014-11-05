@@ -1,10 +1,7 @@
-package org.andengine.limbo.mesh.xy;
-
-import org.andengine.limbo.mesh.dynamic.DynamicMesh;
+package org.andengine.limbo.mesh;
 
 
-
-public abstract class DynamicMeshXYProvider extends DynamicXYProvider implements IDynamicMeshXYProvider {
+public abstract class XYProvider implements IXYProvider{
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -12,32 +9,35 @@ public abstract class DynamicMeshXYProvider extends DynamicXYProvider implements
 	// ===========================================================
 	// Fields
 	// ===========================================================
-
-	protected DynamicMesh mDynamicMesh;
+	protected int mVertexCount;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicMeshXYProvider(int pVertexCount) {
-		super(pVertexCount);
+	public XYProvider() {
+		super();
 	}
 
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-	@Override
-	public void setMesh(DynamicMesh pDynamicMesh) {
-		this.mDynamicMesh = pDynamicMesh;
-	}
+
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	@Override
+	public int getVertexCount() {
+		return mVertexCount;
+	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
+	protected void setVertexCount(int pVertexCount) {
+		mVertexCount = pVertexCount;
+	}
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
+
 }

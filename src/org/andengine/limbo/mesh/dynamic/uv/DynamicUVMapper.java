@@ -1,6 +1,7 @@
-package org.andengine.limbo.mesh.uv;
+package org.andengine.limbo.mesh.dynamic.uv;
 
-import org.andengine.limbo.mesh.xy.IXYProvider;
+import org.andengine.limbo.mesh.IXYProvider;
+import org.andengine.limbo.mesh.UVMapper;
 import org.andengine.opengl.texture.region.ITextureRegion;
 
 

@@ -1,8 +1,10 @@
-package org.andengine.limbo.mesh.xy;
+package org.andengine.limbo.mesh.dynamic.xy;
+
+import org.andengine.limbo.mesh.XYProvider;
 
 
 
-public abstract class DynamicXYProvider implements IDynamicXYProvider {
+public abstract class DynamicXYProvider extends XYProvider implements IDynamicXYProvider {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -10,7 +12,6 @@ public abstract class DynamicXYProvider implements IDynamicXYProvider {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected int mVertexCount;
 	protected boolean mIsDirty = false;
 	private float mScale = 1;
 	private float mOriginX = 0;
@@ -31,10 +32,14 @@ public abstract class DynamicXYProvider implements IDynamicXYProvider {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	@Override
-	public int getVertexCount() {
-		return mVertexCount;
-	}
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
+
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
 
 	@Override
 	public void onUpdate(float pSecondsElapsed) {
@@ -89,14 +94,4 @@ public abstract class DynamicXYProvider implements IDynamicXYProvider {
 	public float getRotation() {
 		return mRotation;
 	}
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-	protected void setVertexCount(int pVertexCount) {
-		mVertexCount = pVertexCount;
-	}
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
 }

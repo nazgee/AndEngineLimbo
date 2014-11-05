@@ -45,7 +45,9 @@ public class Ray {
 		if (mIsEnabled) {
 			pRayCastCallback.setRay(this);
 			mCastTarget.set(dir).mul(pDirectionScale).rotate(-pCastRotation).add(pCastOrigin);
-			pWorld.rayCast(pRayCastCallback, pCastOrigin, mCastTarget);
+			if (!mCastTarget.epsilonEquals(pCastOrigin, 0.0001f)) {
+				pWorld.rayCast(pRayCastCallback, pCastOrigin, mCastTarget);
+			}
 		}
 		// this gets set in RayCastCallback
 		return fraction;

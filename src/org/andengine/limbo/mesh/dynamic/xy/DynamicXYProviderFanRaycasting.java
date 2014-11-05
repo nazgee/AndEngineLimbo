@@ -1,4 +1,4 @@
-package org.andengine.limbo.mesh.xy;
+package org.andengine.limbo.mesh.dynamic.xy;
 
 import java.util.ArrayList;
 
@@ -30,6 +30,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 
 	private Vector2 mTmpVector = new Vector2();
 	private PhysicsWorld mWorld;
+	private float mPixelToMeter;
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -37,8 +38,8 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	 * In most cases using this should be enough
 	 * @param pRaysInitializer
 	 */
-	public DynamicXYProviderFanRaycasting(IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener) {
-		this(new DefaultQualityJustifier(), pRaysInitializer, pRaycastListener);
+	public DynamicXYProviderFanRaycasting(IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
+		this(new DefaultQualityJustifier(), pRaysInitializer, pRaycastListener, pPixelToMeter);
 	}
 
 	/**
@@ -46,19 +47,20 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	 * @param pWavefrontAngleQualityThreshold
 	 * @param pRaysInitializer
 	 */
-	public DynamicXYProviderFanRaycasting(float pWavefrontAngleQualityThreshold, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener) {
-		this(new DefaultQualityJustifier(pWavefrontAngleQualityThreshold), pRaysInitializer, pRaycastListener);
+	public DynamicXYProviderFanRaycasting(float pWavefrontAngleQualityThreshold, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
+		this(new DefaultQualityJustifier(pWavefrontAngleQualityThreshold), pRaysInitializer, pRaycastListener, pPixelToMeter);
 	}
 
-	public DynamicXYProviderFanRaycasting(IRaycastQualityJustifier pRaycastQualityJustifier, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener) {
+	public DynamicXYProviderFanRaycasting(IRaycastQualityJustifier pRaycastQualityJustifier, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
 		super(pRaysInitializer.getRaysNumber(), true);
 
 		this.mRaysInitializer = pRaysInitializer;
 		this.mRaycastQualityJustifier = pRaycastQualityJustifier;
 		this.mRaycastListener = pRaycastListener;
 
-		mRays = this.mRaysInitializer.populateRays();
+		this.mRays = this.mRaysInitializer.populateRays();
 		this.mRaysInitializer.initializeRays(mRays);
+		this.mPixelToMeter = pPixelToMeter;
 	}
 	// ===========================================================
 	// Getter & Setter
@@ -74,6 +76,31 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	@Override
+	public float getX(int i) {
+		return super.getX(i) * mPixelToMeter;
+	}
+
+	@Override
+	public float getY(int i) {
+		return super.getY(i) * mPixelToMeter;
+	}
+
+	@Override
+	public void setOrigin(float pX, float pY) {
+		super.setOrigin(pX / mPixelToMeter, pY / mPixelToMeter);
+	}
+	
+	@Override
+	public float getOriginX() {
+		return super.getOriginX() * mPixelToMeter;
+	}
+	
+	@Override
+	public float getOriginY() {
+		return super.getOriginY() * mPixelToMeter;
+	}
+
 	@Override
 	protected float getBorderVertexX(int i) {
 		if (mRaysToDraw.size() == 0) {
@@ -128,7 +155,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				if (ray != null) {
 					ray.insertRight(rayCurrent);
 				}
-				rayCurrent.cast(pWorld, mRaycastListener, mTmpVector.set(getOriginX(), getOriginY()), getRotation(), getScale());
+				rayCurrent.cast(pWorld, mRaycastListener, mTmpVector.set(super.getOriginX(), super.getOriginY()), getRotation(), getScale());
 				ray = rayCurrent;
 			}
 		}
@@ -191,7 +218,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				RayNode rayOfHope = mRays[indexOfNewRay];
 				pRayCurr.insertLeft(rayOfHope);
 				rayOfHope.setEnabled(true);
-				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOriginX(), getOriginY()), getRotation(), getScale());
+				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(super.getOriginX(), super.getOriginY()), getRotation(), getScale());
 
 				//Log.e("sharpening left of #" + pRayCurr.weight + " with #" + rayOfHope.weight);
 				return rayPrev; //
@@ -201,7 +228,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				RayNode rayOfHope = mRays[indexOfNewRay];
 				pRayCurr.insertRight(rayOfHope);
 				rayOfHope.setEnabled(true);
-				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOriginX(), getOriginY()), getRotation(), getScale());
+				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(super.getOriginX(), super.getOriginY()), getRotation(), getScale());
 
 				//Log.e("sharpening right of #" + pRayCurr.weight + " with #" + rayOfHope.weight);
 				return pRayCurr; //

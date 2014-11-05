@@ -1,10 +1,8 @@
-package org.andengine.limbo.mesh.xy;
+package org.andengine.limbo.mesh.dynamic.xy;
 
 
 
-
-
-public class DynamicMeshXYProviderProxyScaling extends DynamicMeshXYProviderProxy {
+public abstract class DynamicXYProviderFan extends DynamicXYProvider {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -12,58 +10,64 @@ public class DynamicMeshXYProviderProxyScaling extends DynamicMeshXYProviderProx
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private float mScaling = 1;
+	private final boolean mForceFanClosure;
+	protected float mHubX = 0;
+	protected float mHubY = 0;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicMeshXYProviderProxyScaling(IDynamicXYProvider pDynamicXYProvider, final float pScale) {
-		super(pDynamicXYProvider);
-		setPixelToMeterRatio(pScale);
+	public DynamicXYProviderFan(int pVertexCount) {
+		this(pVertexCount, false);
 	}
 
-	public float getPixelToMeterRatio() {
-		return mScaling;
+	public DynamicXYProviderFan(int pVertexCount, boolean pForceFanClosure) {
+		super(pVertexCount);
+		this.mForceFanClosure = pForceFanClosure;
 	}
-
-	public void setPixelToMeterRatio(float mPixelToMeterRatio) {
-		this.mScaling = mPixelToMeterRatio;
-	}
-
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	@Override
+	public int getVertexCount() {
+		// hub + vertices + closure
+		return 1 + mVertexCount + (mForceFanClosure ? 1 : 0);
+	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
 	public float getX(int i) {
-		return super.getX(i) * mScaling;
+		if (i == 0) {
+			return mHubX;
+		} else {
+			return getBorderVertexX(indexToVertex(i));
+		}
 	}
 
 	@Override
 	public float getY(int i) {
-		return super.getY(i) * mScaling;
+		if (i == 0) {
+			return mHubY;
+		} else {
+			return getBorderVertexY(indexToVertex(i));
+		}
 	}
 
-	@Override
-	public void setOrigin(float pX, float pY) {
-		super.setOrigin(pX / mScaling, pY / mScaling);
-	}
-
-	@Override
-	public float getOriginX() {
-		return super.getOriginX() * mScaling;
-	}
-
-	@Override
-	public float getOriginY() {
-		return super.getOriginY() * mScaling;
-	}
 	// ===========================================================
 	// Methods
 	// ===========================================================
+	abstract protected float getBorderVertexX(int i);
+	abstract protected float getBorderVertexY(int i);
+
+	protected int indexToVertex(int i) {
+		if (i <= 0) {
+			throw new RuntimeException("bad vertex index (" + i + ")");
+		}
+
+		return ((i-1) % mVertexCount);
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes

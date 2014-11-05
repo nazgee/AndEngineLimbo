@@ -1,10 +1,6 @@
-package org.andengine.limbo.mesh.uv;
+package org.andengine.limbo.mesh;
+public interface IUVMapper {
 
-import org.andengine.limbo.mesh.xy.IXYProvider;
-import org.andengine.opengl.texture.region.ITextureRegion;
-
-
-abstract class UVMapper implements IUVMapper {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -12,16 +8,10 @@ abstract class UVMapper implements IUVMapper {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected final ITextureRegion mTextureRegion;
-	protected final IXYProvider mVertexProvider;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public UVMapper(ITextureRegion pTextureRegion, IXYProvider pVertexProviderFan) {
-		this.mTextureRegion = pTextureRegion;
-		this.mVertexProvider = pVertexProviderFan;
-	}
 
 	// ===========================================================
 	// Getter & Setter
@@ -30,29 +20,14 @@ abstract class UVMapper implements IUVMapper {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	@Override
-	public int getVertexCount() {
-		return mVertexProvider.getVertexCount();
-	}
-
-	@Override
-	public float getV(int i) {
-		return calculateV(mVertexProvider.getY(i));
-	}
-
-	@Override
-	public float getU(int i) {
-		return calculateU(mVertexProvider.getX(i));
-	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	abstract protected float calculateU(float pX);
-	abstract protected float calculateV(float pY);
-
+	public float getU(int i);
+	public float getV(int i);
+	public int getVertexCount();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
-
 }

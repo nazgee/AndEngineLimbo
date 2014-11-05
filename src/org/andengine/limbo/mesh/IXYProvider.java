@@ -1,8 +1,6 @@
-package org.andengine.limbo.mesh.xy;
+package org.andengine.limbo.mesh;
+public interface IXYProvider {
 
-import org.andengine.engine.handler.IUpdateHandler;
-
-public interface IDynamicXYProvider extends IXYProvider, IUpdateHandler{
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -26,18 +24,9 @@ public interface IDynamicXYProvider extends IXYProvider, IUpdateHandler{
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	boolean isDirty();
-	void setDirty(boolean pDirty);
-
-	void setScale(float pScale);
-	float getScale();
-
-	void setOrigin(float pX, float pY);
-	float getOriginX();
-	float getOriginY();
-
-	void setRotation(float pRotation);
-	float getRotation();
+	public float getX(int i);
+	public float getY(int i);
+	public int getVertexCount();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

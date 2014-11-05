@@ -3,8 +3,8 @@ package org.andengine.limbo.mesh.dynamic.textured;
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.limbo.mesh.dynamic.DynamicMesh;
-import org.andengine.limbo.mesh.uv.IDynamicUVMapper;
-import org.andengine.limbo.mesh.xy.IDynamicMeshXYProvider;
+import org.andengine.limbo.mesh.dynamic.uv.IDynamicUVMapper;
+import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.shader.PositionColorTextureCoordinatesShaderProgram;
 import org.andengine.opengl.shader.constants.ShaderProgramConstants;
 import org.andengine.opengl.texture.region.ITextureRegion;
@@ -40,14 +40,14 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 	// Fields
 	// ===========================================================
 	protected ITextureRegion mTextureRegion;
-	public IDynamicMeshXYProvider xyProvider;
+	public IDynamicXYProvider xyProvider;
 	public IDynamicUVMapper uvMapper;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 
-	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicMeshXYProvider pXYProvider,
+	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
 			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode, final ITextureRegion pTextureRegion,
 			final VertexBufferObjectManager pVertexBufferObjectManager, final DrawType pDrawType) {
 
@@ -57,7 +57,7 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 						pDrawType, true, DynamicTexturedMesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT));
 	}
 
-	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicMeshXYProvider pXYProvider,
+	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
 			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode, final ITextureRegion pTextureRegion,
 			final IDynamicTexturedMeshVertexBufferObject pMeshVertexBufferObject) {
 

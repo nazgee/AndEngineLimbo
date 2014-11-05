@@ -1,5 +1,9 @@
-package org.andengine.limbo.mesh.xy;
-public interface IXYProvider {
+package org.andengine.limbo.mesh.dynamic.uv;
+
+import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.limbo.mesh.IUVMapper;
+
+public interface IDynamicUVMapper extends IUVMapper,IUpdateHandler {
 
 	// ===========================================================
 	// Constants
@@ -24,9 +28,8 @@ public interface IXYProvider {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public float getX(int i);
-	public float getY(int i);
-	public int getVertexCount();
+	boolean isDirty();
+	void setDirty(boolean pDirty);
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
