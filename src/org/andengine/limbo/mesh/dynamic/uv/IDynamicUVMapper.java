@@ -2,8 +2,9 @@ package org.andengine.limbo.mesh.dynamic.uv;
 
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.limbo.mesh.IUVMapper;
+import org.andengine.limbo.mesh.dynamic.IMutable;
 
-public interface IDynamicUVMapper extends IUVMapper,IUpdateHandler {
+public interface IDynamicUVMapper extends IUVMapper, IUpdateHandler, IMutable {
 
 	// ===========================================================
 	// Constants
@@ -28,8 +29,8 @@ public interface IDynamicUVMapper extends IUVMapper,IUpdateHandler {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	boolean isDirty();
-	void setDirty(boolean pDirty);
+	public int getNumberOfVerticesMax();
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

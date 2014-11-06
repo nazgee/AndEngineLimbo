@@ -1,5 +1,7 @@
 package org.andengine.limbo.mesh.dynamic.textured;
 
+import java.security.PublicKey;
+
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.limbo.mesh.dynamic.DynamicMesh;
@@ -13,6 +15,7 @@ import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.attribute.VertexBufferObjectAttributes;
 import org.andengine.opengl.vbo.attribute.VertexBufferObjectAttributesBuilder;
+import org.andengine.util.adt.color.Color;
 
 import android.opengl.GLES20;
 
@@ -40,7 +43,6 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 	// Fields
 	// ===========================================================
 	protected ITextureRegion mTextureRegion;
-	public IDynamicXYProvider xyProvider;
 	public IDynamicUVMapper uvMapper;
 
 	// ===========================================================
@@ -53,7 +55,7 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 
 		this(pX, pY, pXYProvider, pUVMapper, pDrawMode, pTextureRegion, 
 				new HighPerformanceDynamicTexturedMeshVertexBufferObject(
-						pVertexBufferObjectManager, pXYProvider.getVertexCount() * DynamicTexturedMesh.VERTEX_SIZE,
+						pVertexBufferObjectManager, pXYProvider.getNumberOfVerticesMax() * DynamicTexturedMesh.VERTEX_SIZE,
 						pDrawType, true, DynamicTexturedMesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT));
 	}
 
@@ -64,17 +66,17 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 		super(pX, pY, pXYProvider, pDrawMode, pMeshVertexBufferObject);
 		setShaderProgram(PositionColorTextureCoordinatesShaderProgram.getInstance());
 
-		this.xyProvider = pXYProvider;
+		pUVMapper.calculateUV();
 		this.uvMapper = pUVMapper;
 		this.mTextureRegion = pTextureRegion;
 
 		if( pTextureRegion != null)
 		{
-			this.setBlendingEnabled(true);
 			this.initBlendFunction(pTextureRegion);
 			this.onUpdateTextureCoordinates();
 		}
-		this.setBlendingEnabled(true);
+
+		setColor(Color.WHITE);
 
 		this.onUpdateVertices();
 		this.onUpdateTextureCoordinates();

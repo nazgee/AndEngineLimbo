@@ -13,16 +13,12 @@ public abstract class DynamicXYProvider extends XYProvider implements IDynamicXY
 	// Fields
 	// ===========================================================
 	protected boolean mIsDirty = false;
-	private float mScale = 1;
-	private float mOriginX = 0;
-	private float mOriginY = 0;
-	private float mRotation = 0;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 	public DynamicXYProvider(int pVertexCount) {
-		this.mVertexCount = pVertexCount;
+		super(pVertexCount);
 	}
 
 	// ===========================================================
@@ -32,19 +28,17 @@ public abstract class DynamicXYProvider extends XYProvider implements IDynamicXY
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-
-	// ===========================================================
-	// Methods
-	// ===========================================================
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
+	@Override
+	public int getNumberOfVerticesMax() {
+		return this.mX.getCapacity();
+	}
 
 	@Override
 	public void onUpdate(float pSecondsElapsed) {
+		if (isDirty()) {
+			calculateXY();
+		}
 	}
-
 	@Override
 	public void reset() {
 	}
@@ -58,40 +52,13 @@ public abstract class DynamicXYProvider extends XYProvider implements IDynamicXY
 	public void setDirty(boolean pDirty) {
 		mIsDirty = pDirty;
 	}
+	// ===========================================================
+	// Methods
+	// ===========================================================
 
-	@Override
-	public void setScale(float pScale) {
-		this.mScale = pScale;
-	}
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
 
-	@Override
-	public float getScale() {
-		return mScale;
-	}
 
-	@Override
-	public void setOrigin(float pX, float pY) {
-		this.mOriginX = pX;
-		this.mOriginY = pY;
-	}
-
-	@Override
-	public float getOriginX() {
-		return mOriginX;
-	}
-
-	@Override
-	public float getOriginY() {
-		return mOriginY;
-	}
-
-	@Override
-	public void setRotation(float pRotation) {
-		this.mRotation = pRotation;
-	}
-
-	@Override
-	public float getRotation() {
-		return mRotation;
-	}
 }

@@ -1,6 +1,10 @@
 package org.andengine.limbo.mesh.dynamic;
 
+import org.andengine.entity.primitive.Mesh;
+import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.primitive.vbo.HighPerformanceMeshVertexBufferObject;
+import org.andengine.limbo.mesh.FloatChain;
+import org.andengine.limbo.mesh.IXYProvider;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.attribute.VertexBufferObjectAttributes;
@@ -21,6 +25,27 @@ public class HighPerformanceDynamicMeshVertexBufferObject extends HighPerformanc
 	// Constants
 	// ===========================================================
 
+	@Override
+	public void onUpdateVertices(Mesh pMesh) {
+		DynamicMesh dynmesh = (DynamicMesh) pMesh;
+		if (dynmesh.xyProvider == null) {
+			return;
+		}
+
+		final float[] bufferData = this.mBufferData;
+
+		final IXYProvider verticesProvider = dynmesh.xyProvider;
+		final int verticesToDraw = verticesProvider.getNumberOfVertices();
+		final FloatChain xs = verticesProvider.getX();
+		final FloatChain ys = verticesProvider.getY();
+
+		for (int i = 0; i < verticesToDraw; i++) {
+			bufferData[i * DynamicMesh.VERTEX_SIZE + DynamicMesh.VERTEX_INDEX_X] = xs.getScaled(i);
+			bufferData[i * DynamicMesh.VERTEX_SIZE + DynamicMesh.VERTEX_INDEX_Y] = ys.getScaled(i);
+		}
+
+		this.setDirtyOnHardware();
+	}
 	// ===========================================================
 	// Fields
 	// ===========================================================

@@ -3,7 +3,7 @@ package org.andengine.limbo.mesh;
 import org.andengine.opengl.texture.region.ITextureRegion;
 
 
-abstract public class UVMapper implements IUVMapper {
+public abstract class UVMapper implements IUVMapper {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -13,13 +13,17 @@ abstract public class UVMapper implements IUVMapper {
 	// ===========================================================
 	protected final ITextureRegion mTextureRegion;
 	protected final IXYProvider mVertexProvider;
+	protected final FloatChain mU;
+	protected final FloatChain mV;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public UVMapper(ITextureRegion pTextureRegion, IXYProvider pVertexProviderFan) {
+	public UVMapper(ITextureRegion pTextureRegion, IXYProvider pXYProvider, int pVerticesNumber) {
 		this.mTextureRegion = pTextureRegion;
-		this.mVertexProvider = pVertexProviderFan;
+		this.mVertexProvider = pXYProvider;
+		this.mU = new FloatChain(pVerticesNumber);
+		this.mV = new FloatChain(pVerticesNumber);
 	}
 
 	// ===========================================================
@@ -30,25 +34,25 @@ abstract public class UVMapper implements IUVMapper {
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
-	public int getVertexCount() {
-		return mVertexProvider.getVertexCount();
+	public int getNumberOfVertices() {
+		return this.mU.getSize();
 	}
 
 	@Override
-	public float getV(int i) {
-		return calculateV(mVertexProvider.getY(i));
+	public FloatChain getV() {
+		//return calculateV(mVertexProvider.getY(i));
+		return this.mV;
 	}
 
 	@Override
-	public float getU(int i) {
-		return calculateU(mVertexProvider.getX(i));
+	public FloatChain getU() {
+		//return calculateU(mVertexProvider.getX(i));
+		return this.mU;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	abstract protected float calculateU(float pX);
-	abstract protected float calculateV(float pY);
 
 	// ===========================================================
 	// Inner and Anonymous Classes

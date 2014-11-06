@@ -1,7 +1,9 @@
 package org.andengine.limbo.mesh;
 
 import org.andengine.entity.primitive.DrawMode;
+import org.andengine.entity.shape.IShape;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.limbo.mesh.dynamic.DynamicMesh;
 import org.andengine.limbo.mesh.dynamic.textured.DynamicTexturedMesh;
 import org.andengine.limbo.mesh.dynamic.uv.DynamicUVMapperCutout;
 import org.andengine.limbo.mesh.dynamic.xy.DynamicXYProviderFanRaycasting;
@@ -10,6 +12,9 @@ import org.andengine.limbo.physics.raycast.initializer.RadialRaysInitializer;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.adt.color.Color;
+
+import android.opengl.GLES20;
 
 
 public class MeshFactory {
@@ -24,13 +29,13 @@ public class MeshFactory {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public static DynamicTexturedMesh createPointLight(ITextureRegion pTexture, float pRadius, int pRaysStep, int pRaysCount, float pPixelToMeter, final PhysicsWorld pWorld, VertexBufferObjectManager vbo) {
+	public static DynamicMesh createPointLight(ITextureRegion pTexture, float pRadius, int pRaysStep, int pRaysCount, float pPixelToMeter, final PhysicsWorld pWorld, VertexBufferObjectManager vbo) {
 		final float scaleU = pRadius / (pTexture.getWidth() / 2);
 		final float scaleV = pRadius / (pTexture.getHeight() / 2);
 		return createPointLight(pTexture, pRadius, scaleU, scaleV, pRaysStep, pRaysCount, pPixelToMeter, pWorld, vbo);
 	}
 
-	public static DynamicTexturedMesh createPointLight(ITextureRegion pTexture, float pRadius, float pScaleU, float pScaleV, int pRaysStep, int pRaysCount, final float pPixelToMeter, final PhysicsWorld pWorld, VertexBufferObjectManager vbo) {
+	public static DynamicMesh createPointLight(ITextureRegion pTexture, float pRadius, float pScaleU, float pScaleV, int pRaysStep, int pRaysCount, final float pPixelToMeter, final PhysicsWorld pWorld, VertexBufferObjectManager vbo) {
 
 		final RadialRaysInitializer raysInitializer = new RadialRaysInitializer(pRadius/pPixelToMeter, pRaysStep, pRaysCount);
 		final DynamicXYProviderFanRaycasting xyProvider = new DynamicXYProviderFanRaycasting(raysInitializer, new RaycastListener(), pPixelToMeter);
@@ -38,17 +43,22 @@ public class MeshFactory {
 
 		xyProvider.setPhysicsWorld(pWorld);
 		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProvider, uvMapper, DrawMode.TRIANGLE_FAN, pTexture, vbo, DrawType.STREAM) {
+		//DynamicMesh mesh = new DynamicMesh(0, 0, xyProvider, DrawMode.TRIANGLE_FAN, vbo, DrawType.STREAM) {
 
 			@Override
 			protected void onManagedUpdate(float pSecondsElapsed) {
-				this.xyProvider.setScale(getScaleX());
-				this.xyProvider.setOrigin(getX(), getY());
-				this.xyProvider.setRotation(getRotation());
+				DynamicXYProviderFanRaycasting raycaster = (DynamicXYProviderFanRaycasting)this.xyProvider;
+
+				raycaster.setScale(getScaleX());
+				raycaster.setOffset(getX(), getY());
+				raycaster.setRotation(getRotation());
 
 				super.onManagedUpdate(pSecondsElapsed);
 			}
 			
 		};
+		mesh.setBlendFunction(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE);
+		mesh.setBlendingEnabled(true);
 		return mesh;
 	}
 	// ===========================================================

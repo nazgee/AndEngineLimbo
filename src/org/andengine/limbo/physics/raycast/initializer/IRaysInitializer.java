@@ -31,6 +31,10 @@ public interface IRaysInitializer {
 	RayNodeTagged[] populateRays();
 	void initializeRays(RayNodeTagged[] pRays);
 	void resetRays(RayNodeTagged[] pRays);
+	/**
+	 * Maximum number of rays that can will be cast 
+	 * @return
+	 */
 	int getRaysNumber();
 	// ===========================================================
 	// Inner and Anonymous Classes

@@ -24,9 +24,10 @@ public interface IXYProvider {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public float getX(int i);
-	public float getY(int i);
-	public int getVertexCount();
+	public void calculateXY();
+	public FloatChain getX();
+	public FloatChain getY();
+	public int getNumberOfVertices();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

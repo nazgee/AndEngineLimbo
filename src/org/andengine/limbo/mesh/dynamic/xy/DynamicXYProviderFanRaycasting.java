@@ -10,6 +10,8 @@ import org.andengine.limbo.physics.raycast.RaycastListener;
 import org.andengine.limbo.physics.raycast.initializer.IRaysInitializer;
 import org.andengine.util.math.MathUtils;
 
+import android.util.Log;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
@@ -30,7 +32,13 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 
 	private Vector2 mTmpVector = new Vector2();
 	private PhysicsWorld mWorld;
-	private float mPixelToMeter;
+	/**
+	 * Override this field to have rays scaled
+	 */
+	protected float mScale = 1.0f;
+	private float mOriginX = 0;
+	private float mOriginY = 0;
+	private float mRotation = 0;
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -52,7 +60,8 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	}
 
 	public DynamicXYProviderFanRaycasting(IRaycastQualityJustifier pRaycastQualityJustifier, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
-		super(pRaysInitializer.getRaysNumber(), true);
+		// rays_number + closing_vertex(repeated first)
+		super(pRaysInitializer.getRaysNumber());
 
 		this.mRaysInitializer = pRaysInitializer;
 		this.mRaycastQualityJustifier = pRaycastQualityJustifier;
@@ -60,7 +69,9 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 
 		this.mRays = this.mRaysInitializer.populateRays();
 		this.mRaysInitializer.initializeRays(mRays);
-		this.mPixelToMeter = pPixelToMeter;
+
+		this.mX.setScale(pPixelToMeter);
+		this.mY.setScale(pPixelToMeter);
 	}
 	// ===========================================================
 	// Getter & Setter
@@ -76,49 +87,6 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	@Override
-	public float getX(int i) {
-		return super.getX(i) * mPixelToMeter;
-	}
-
-	@Override
-	public float getY(int i) {
-		return super.getY(i) * mPixelToMeter;
-	}
-
-	@Override
-	public void setOrigin(float pX, float pY) {
-		super.setOrigin(pX / mPixelToMeter, pY / mPixelToMeter);
-	}
-	
-	@Override
-	public float getOriginX() {
-		return super.getOriginX() * mPixelToMeter;
-	}
-	
-	@Override
-	public float getOriginY() {
-		return super.getOriginY() * mPixelToMeter;
-	}
-
-	@Override
-	protected float getBorderVertexX(int i) {
-		if (mRaysToDraw.size() == 0) {
-			return 0; // XXX throw an exception?
-		}
-		Ray ray = mRaysToDraw.get(i);
-		return ray.dir.x * ray.fraction;
-	}
-
-	@Override
-	protected float getBorderVertexY(int i) {
-		if (mRaysToDraw.size() == 0) {
-			return 0; // XXX throw an exception?
-		}
-		Ray ray = mRaysToDraw.get(i);
-		return ray.dir.y * ray.fraction;
-	}
-
 	
 	@Override
 	public void onUpdate(float pSecondsElapsed) {
@@ -126,13 +94,72 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 			return;
 		}
 
-		mIsDirty = true;
+		setDirty(true);
 		raycast(mWorld);
+
+		super.onUpdate(pSecondsElapsed);
 	}
+
+	public void calculateXY() {
+		if (mRaysToDraw == null) {
+			// might get here when called from base class
+			return;
+		}
+
+		// vertices = rays - hub
+		final int numberOfVertsToDraw = mRaysToDraw.size();
+		mX.clear();
+		mY.clear();
+
+		if (numberOfVertsToDraw >= 2) {
+			// hub
+			mX.add(0);
+			mY.add(0);
+	
+			for (int i = 0; i < numberOfVertsToDraw; i++) {
+				final Ray ray = mRaysToDraw.get(i);
+				mX.add(ray.dir.x * ray.fraction);
+				mY.add(ray.dir.y * ray.fraction);
+			}
+
+			makeFanLoop();
+		}
+	}
+
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
+
+	public void setOffset(float pX, float pY) {
+		this.mOriginX = pX;
+		this.mOriginY = pY;
+	}
+
+	public float getOffsetX() {
+		return mOriginX;
+	}
+
+	public float getOffsetY() {
+		return mOriginY;
+	}
+
+	public void setRotation(float pRotation) {
+		this.mRotation = pRotation;
+	}
+
+	public float getRotation() {
+		return mRotation;
+	}
+	
+	public void setScale(float pScale) {
+		mScale = pScale;
+	}
+
+	public float getScale() {
+		return mScale;
+	}
+
 	/**
 	 * Generates lightcone with as few raycasts as possible
 	 * @param pWorld
@@ -148,6 +175,9 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 		mRaysInitializer.resetRays(raysAll);
 
 		// initially cast only a small(for performance reasons) subset of enabled rays
+		float originX = getOffsetX() / mX.getScale();
+		float originY = getOffsetY() / mY.getScale();
+
 		for (int i = 0; i < rayCount; i++) {
 			RayNodeTagged rayCurrent = raysAll[i];
 
@@ -155,7 +185,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				if (ray != null) {
 					ray.insertRight(rayCurrent);
 				}
-				rayCurrent.cast(pWorld, mRaycastListener, mTmpVector.set(super.getOriginX(), super.getOriginY()), getRotation(), getScale());
+				rayCurrent.cast(pWorld, mRaycastListener, mTmpVector.set(originX, originY), getRotation(), mScale);
 				ray = rayCurrent;
 			}
 		}
@@ -171,9 +201,6 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 			mRaysToDraw.add(ray);
 			ray = (RayNodeTagged) ray.next;
 		}
-
-		setVertexCount(mRaysToDraw.size());
-		//Log.e("count="+mVertexCount);
 	}
 
 	/**
@@ -218,7 +245,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				RayNode rayOfHope = mRays[indexOfNewRay];
 				pRayCurr.insertLeft(rayOfHope);
 				rayOfHope.setEnabled(true);
-				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(super.getOriginX(), super.getOriginY()), getRotation(), getScale());
+				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOffsetX() / mX.getScale(), getOffsetY() / mY.getScale()), getRotation(), mScale);
 
 				//Log.e("sharpening left of #" + pRayCurr.weight + " with #" + rayOfHope.weight);
 				return rayPrev; //
@@ -228,7 +255,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				RayNode rayOfHope = mRays[indexOfNewRay];
 				pRayCurr.insertRight(rayOfHope);
 				rayOfHope.setEnabled(true);
-				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(super.getOriginX(), super.getOriginY()), getRotation(), getScale());
+				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOffsetX() / mX.getScale(), getOffsetY() / mY.getScale()), getRotation(), mScale);
 
 				//Log.e("sharpening right of #" + pRayCurr.weight + " with #" + rayOfHope.weight);
 				return pRayCurr; //

@@ -1,11 +1,18 @@
 package org.andengine.limbo.mesh.dynamic;
 
+import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.entity.primitive.Mesh;
 import org.andengine.entity.primitive.vbo.IMeshVertexBufferObject;
 import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
+import org.andengine.opengl.shader.PositionColorShaderProgram;
+import org.andengine.opengl.shader.PositionColorTextureCoordinatesShaderProgram;
+import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.adt.color.Color;
+
+import android.opengl.GLES20;
 
 
 public class DynamicMesh extends Mesh {
@@ -27,15 +34,16 @@ public class DynamicMesh extends Mesh {
 			final DrawType pDrawType) {
 		this(pX, pY, pXYProvider, pDrawMode,
 				new HighPerformanceDynamicMeshVertexBufferObject(pVertexBufferObjectManager,
-						new float[pXYProvider.getVertexCount() * VERTEX_SIZE], pXYProvider.getVertexCount(),
+						new float[pXYProvider.getNumberOfVerticesMax() * VERTEX_SIZE], pXYProvider.getNumberOfVerticesMax(),
 						pDrawType, true, Mesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT)
 				);
 	}
 
 	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
 			final DrawMode pDrawMode, final IMeshVertexBufferObject pMeshVertexBufferObject) {
-		super(pX, pY, 0, 0, pXYProvider.getVertexCount(), pDrawMode, pMeshVertexBufferObject);
+		super(pX, pY, 0, 0, pXYProvider.getNumberOfVerticesMax(), pDrawMode, pMeshVertexBufferObject);
 
+		pXYProvider.calculateXY();
 		this.xyProvider = pXYProvider;
 
 		this.setBlendingEnabled(true);
@@ -67,8 +75,8 @@ public class DynamicMesh extends Mesh {
 		xyProvider.onUpdate(pSecondsElapsed);
 
 		if (xyProvider.isDirty()) {
-			setVertexCountToDraw(xyProvider.getVertexCount());
-			onUpdateVertices();
+			this.onUpdateVertices();
+			this.setVertexCountToDraw(xyProvider.getNumberOfVertices());
 		}
 	}
 
@@ -80,6 +88,11 @@ public class DynamicMesh extends Mesh {
 	// ===========================================================
 	// Methods
 	// ===========================================================
+
+	@Override
+	protected void draw(GLState pGLState, Camera pCamera) {
+		super.draw(pGLState, pCamera);
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes

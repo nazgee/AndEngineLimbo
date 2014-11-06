@@ -24,9 +24,10 @@ public interface IUVMapper {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public float getU(int i);
-	public float getV(int i);
-	public int getVertexCount();
+	public void calculateUV();
+	public FloatChain getU();
+	public FloatChain getV();
+	public int getNumberOfVertices();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

@@ -1,8 +1,5 @@
-package org.andengine.limbo.mesh.dynamic.xy;
-
-
-
-public abstract class DynamicXYProviderFan extends DynamicXYProvider {
+package org.andengine.limbo.mesh.dynamic;
+public interface IMutable {
 
 	// ===========================================================
 	// Constants
@@ -15,26 +12,10 @@ public abstract class DynamicXYProviderFan extends DynamicXYProvider {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	/**
-	 * Creates {@link DynamicXYProvider} with given number of border vertices. Additional +1 HUB vertex will be added.
-	 * @param pVertexCount number of border vertices.
-	 * @param b 
-	 */
-	public DynamicXYProviderFan(int pVertexCount) {
-		// hub + vertices
-		super(1 + pVertexCount + 1);
-	}
+
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
-
-	public void makeFanLoop() {
-		int toDraw = getNumberOfVertices();
-		if (toDraw >= (1+2)) {
-			mX.set(toDraw, mX.get(1));
-			mY.set(toDraw, mY.get(1));
-		}
-	}
 
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -43,7 +24,8 @@ public abstract class DynamicXYProviderFan extends DynamicXYProvider {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
+	boolean isDirty();
+	void setDirty(boolean pDirty);
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

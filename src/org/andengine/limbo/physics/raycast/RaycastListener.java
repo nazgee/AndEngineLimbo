@@ -36,7 +36,8 @@ public class RaycastListener implements RayCastCallback {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-	/**Called for each fixture found in the query. You control how the 
+	/*
+	 * Called for each fixture found in the query. You control how the 
 	 * ray cast proceeds by returning a float: return -1: ignore this 
 	 * fixture and continue return 0: terminate the ray cast return fraction: 
 	 * clip the ray to this point return 1: don't clip the ray and continue. 
@@ -64,8 +65,16 @@ public class RaycastListener implements RayCastCallback {
 	// ===========================================================
 	// Methods
 	// ===========================================================
+	/**
+	 * Override this method to filter out collisions of rays with bodies
+	 * @param fixture
+	 * @param point
+	 * @param normal
+	 * @param fraction
+	 * @return
+	 */
 	protected boolean isIgnored(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-		return !fixture.getBody().isActive();
+		return !fixture.getBody().isActive() || fixture.isSensor();
 	}
 
 	// ===========================================================

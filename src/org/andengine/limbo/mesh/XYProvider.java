@@ -9,13 +9,15 @@ public abstract class XYProvider implements IXYProvider{
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected int mVertexCount;
+	protected final FloatChain mX;
+	protected final FloatChain mY;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public XYProvider() {
-		super();
+	public XYProvider(int pVertexCount) {
+		this.mX = new FloatChain(pVertexCount);
+		this.mY = new FloatChain(pVertexCount);
 	}
 
 	// ===========================================================
@@ -26,16 +28,24 @@ public abstract class XYProvider implements IXYProvider{
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
-	public int getVertexCount() {
-		return mVertexCount;
+	public int getNumberOfVertices() {
+		return this.mX.getSize();
+	}
+
+	@Override
+	public FloatChain getX() {
+		return this.mX;
+	}
+
+	@Override
+	public FloatChain getY() {
+		return this.mY;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	protected void setVertexCount(int pVertexCount) {
-		mVertexCount = pVertexCount;
-	}
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

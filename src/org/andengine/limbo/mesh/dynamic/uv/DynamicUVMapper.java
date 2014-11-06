@@ -1,7 +1,7 @@
 package org.andengine.limbo.mesh.dynamic.uv;
 
-import org.andengine.limbo.mesh.IXYProvider;
 import org.andengine.limbo.mesh.UVMapper;
+import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.texture.region.ITextureRegion;
 
 
@@ -13,13 +13,12 @@ abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected boolean mIsDirty = false;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicUVMapper(ITextureRegion pTextureRegion, IXYProvider pVertexProviderFan) {
-		super(pTextureRegion, pVertexProviderFan);
+	public DynamicUVMapper(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProviderFan) {
+		super(pTextureRegion, pVertexProviderFan, pVertexProviderFan.getNumberOfVerticesMax());
 	}
 
 	// ===========================================================
@@ -30,7 +29,20 @@ abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
+	public int getNumberOfVerticesMax() {
+		return this.mU.getCapacity();
+	}
+
+	@Override
 	public void onUpdate(float pSecondsElapsed) {
+		if (isDirty()) {
+			calculateUV();
+		}
+	}
+
+	@Override
+	public boolean isDirty() {
+		return ((IDynamicXYProvider)mVertexProvider).isDirty();
 	}
 
 	@Override
@@ -38,19 +50,12 @@ abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
 	}
 
 	@Override
-	public boolean isDirty() {
-		return mIsDirty;
-	}
-
-	@Override
 	public void setDirty(boolean pDirty) {
-		mIsDirty = pDirty;
 	}
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
 
 	// ===========================================================
 	// Inner and Anonymous Classes
