@@ -70,6 +70,11 @@ public class ConeRaysInitializer extends RaysInitializer {
 		}
 	}
 
+	@Override
+	public boolean isCircular() {
+		return false;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================

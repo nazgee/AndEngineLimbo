@@ -10,8 +10,6 @@ import org.andengine.limbo.physics.raycast.RaycastListener;
 import org.andengine.limbo.physics.raycast.initializer.IRaysInitializer;
 import org.andengine.util.math.MathUtils;
 
-import android.util.Log;
-
 import com.badlogic.gdx.math.Vector2;
 
 public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
@@ -43,24 +41,18 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	// Constructors
 	// ===========================================================
 	/**
-	 * In most cases using this should be enough
-	 * @param pRaysInitializer
+	 * 
+	 * @param pRaysInitializer provides direction in which rays will be casted
+	 * @param pRaycastListener provides logic to ignore collision of rays with certain fixtures
+	 * @param pPixelToMeter
+	 * @param pMaxRaysAngleDeviation maximum angle of polyline formed from tips of rays(forwarded to {@link RaycastQualityJustifier})
+	 * @param pMaxRaysOffset maximum distance (in pixels) between tips of rays(forwarded to {@link RaycastQualityJustifier})
 	 */
-	public DynamicXYProviderFanRaycasting(IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
-		this(new DefaultQualityJustifier(), pRaysInitializer, pRaycastListener, pPixelToMeter);
+	public DynamicXYProviderFanRaycasting(IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter, float pMaxRaysAngleDeviation, float pMaxRaysOffset) {
+		this(pRaysInitializer, pRaycastListener, pPixelToMeter, new RaycastQualityJustifier(pMaxRaysAngleDeviation, pMaxRaysOffset, pPixelToMeter));
 	}
 
-	/**
-	 * Use when you are not satisfied with default quality resolution
-	 * @param pWavefrontAngleQualityThreshold
-	 * @param pRaysInitializer
-	 */
-	public DynamicXYProviderFanRaycasting(float pWavefrontAngleQualityThreshold, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
-		this(new DefaultQualityJustifier(pWavefrontAngleQualityThreshold), pRaysInitializer, pRaycastListener, pPixelToMeter);
-	}
-
-	public DynamicXYProviderFanRaycasting(IRaycastQualityJustifier pRaycastQualityJustifier, IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter) {
-		// rays_number + closing_vertex(repeated first)
+	public DynamicXYProviderFanRaycasting(IRaysInitializer pRaysInitializer, RaycastListener pRaycastListener, float pPixelToMeter, IRaycastQualityJustifier pRaycastQualityJustifier) {
 		super(pRaysInitializer.getRaysNumber());
 
 		this.mRaysInitializer = pRaysInitializer;
@@ -161,7 +153,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	}
 
 	/**
-	 * Generates lightcone with as few raycasts as possible
+	 * Generates lightcone/lightpoint/whatever with as few raycasts as possible
 	 * @param pWorld
 	 */
 	public void raycast(final PhysicsWorld pWorld) {
@@ -193,7 +185,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 		// enable and cast some more rays to make a smooth shape
 		ray = raysAll[0];
 		while (ray != null) {
-			ray = (RayNodeTagged) makeSmoother(pWorld, ray);
+			ray = (RayNodeTagged) makeSmoother(pWorld, ray, mRaysInitializer.isCircular());
 		}
 
 		ray = raysAll[0];
@@ -201,6 +193,8 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 			mRaysToDraw.add(ray);
 			ray = (RayNodeTagged) ray.next;
 		}
+
+		//Log.e("raycast", "rays to draw: " + mRaysToDraw.size());
 	}
 
 	/**
@@ -211,60 +205,90 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 	 * @param pRayCurr
 	 * @return ray from which we should start smoothing in next iteration
 	 */
-	private RayNode makeSmoother(final PhysicsWorld pWorld, RayNodeTagged pRayCurr) {
+	private RayNode makeSmoother(final PhysicsWorld pWorld, RayNodeTagged pRayCurr, boolean circular) {
 
-		RayNodeTagged rayPrev = (RayNodeTagged) pRayCurr.prev;
-		RayNodeTagged rayNext = (RayNodeTagged) pRayCurr.next;
+		RayNodeTagged rayOnLeft = (RayNodeTagged) pRayCurr.prev;
+		RayNodeTagged rayOnRight = (RayNodeTagged) pRayCurr.next;
+		int raysAvailableLeft;
+		int raysAvailableRight;
 
-		if (rayNext == null) {
-			return null;
+		if (rayOnRight == null) {
+			if (circular && (mRays.length - pRayCurr.tag) > 1) {
+				// special case for radial lights (first ray is also last ray)
+				//Log.e("makeSmoother", "circularizing #" + pRayCurr.tag);
+				raysAvailableRight = mRays.length - pRayCurr.tag;
+				rayOnRight = mRays[0];
+			} else {
+				return null;
+			}
+		} else {
+			raysAvailableRight = rayOnRight.tag - pRayCurr.tag;	
 		}
 
-		if (rayPrev == null) {
-			return pRayCurr.next;
+		if (rayOnLeft == null) {
+			return rayOnRight;
+		} else {
+			raysAvailableLeft = pRayCurr.tag - rayOnLeft.tag;
 		}
-
-		int raysAvailableLeft = pRayCurr.tag - rayPrev.tag;
-		int raysAvailableRight = rayNext.tag - pRayCurr.tag;
 
 		if ((raysAvailableLeft <= 1) && (raysAvailableRight <= 1)) {
-			//Log.e("out of spare siblings #" + pRayCurr.weight);
-
 			// bail out, nothing can be done to improve smoothness anyway
-			return rayNext;
+			return rayOnRight;
 		}
 
 		/* calculate prev-curr-next angle, and see if it is acceptable */
-		float angle = calculateAngle(rayPrev, pRayCurr, rayNext);
+		float distanceLeft = calculateDistance(pRayCurr, rayOnLeft);
+		float distanceRight = calculateDistance(pRayCurr, rayOnRight);
+		float angle = calculateAngle(rayOnLeft, pRayCurr, rayOnRight);
 
-		if (!mRaycastQualityJustifier.isGoodQuality(pRayCurr, angle)) {
-			// need to sharpen it
-			if (raysAvailableLeft > 1) {
-				// try to fix it by inserting new ray in the middle
-				int indexOfNewRay = rayPrev.tag + raysAvailableLeft/2;
-				RayNode rayOfHope = mRays[indexOfNewRay];
-				pRayCurr.insertLeft(rayOfHope);
-				rayOfHope.setEnabled(true);
-				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOffsetX() / mX.getScale(), getOffsetY() / mY.getScale()), getRotation(), mScale);
+		boolean smoothingLeftPossible = raysAvailableLeft > 1;
+		boolean smoothingRightPossible = raysAvailableRight > 1;
+		boolean smoothingLeftWanted = smoothingLeftPossible && !mRaycastQualityJustifier.isGoodQuality(pRayCurr, angle, distanceLeft);
+		boolean smoothingRightWanted = smoothingRightPossible && !mRaycastQualityJustifier.isGoodQuality(pRayCurr, angle, distanceRight);
+		boolean smoothingLeftPreffered = distanceLeft > distanceRight;
 
-				//Log.e("sharpening left of #" + pRayCurr.weight + " with #" + rayOfHope.weight);
-				return rayPrev; //
-			} else {
-				// try to fix it by inserting new ray in the middle
-				int indexOfNewRay = pRayCurr.tag + raysAvailableRight/2;
-				RayNode rayOfHope = mRays[indexOfNewRay];
-				pRayCurr.insertRight(rayOfHope);
-				rayOfHope.setEnabled(true);
-				rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOffsetX() / mX.getScale(), getOffsetY() / mY.getScale()), getRotation(), mScale);
-
-				//Log.e("sharpening right of #" + pRayCurr.weight + " with #" + rayOfHope.weight);
-				return pRayCurr; //
-			}
+		if (smoothingLeftWanted && (!smoothingRightWanted || smoothingLeftPreffered)) {
+			//Log.e("makeSmoother", "L #" + pRayCurr.tag + "(L:"+raysAvailableLeft+" R:" +raysAvailableRight+") angle=" + angle + " left=" + distanceLeft + " right=" + distanceRight + " L=" + smoothingLeftWanted + " R=" + smoothingRightWanted);
+			return makeSmootherLeft(pWorld, pRayCurr, raysAvailableLeft);
+		} else if (smoothingRightWanted) {
+			//Log.e("makeSmoother", "R #" + pRayCurr.tag + "(L:"+raysAvailableLeft+" R:" +raysAvailableRight+") angle=" + angle + " left=" + distanceLeft + " right=" + distanceRight + " L=" + smoothingLeftWanted + " R=" + smoothingRightWanted);
+			return makeSmootherRight(pWorld, pRayCurr, raysAvailableRight);
 		} else {
-			// we are fine!
-			//Log.e("we're fine #" + pRayCurr.weight);
-			return rayNext;
+			//Log.e("makeSmoother", "X #" + pRayCurr.tag + "(L:"+raysAvailableLeft+" R:" +raysAvailableRight+") angle=" + angle + " left=" + distanceLeft + " right=" + distanceRight + " L=" + smoothingLeftWanted + " R=" + smoothingRightWanted);
+			return rayOnRight;
 		}
+	}
+
+	public RayNode makeSmootherRight(final PhysicsWorld pWorld, RayNodeTagged pRayCurr, int raysAvailableRight) {
+		int indexOfNewRay = pRayCurr.tag + raysAvailableRight/2;
+		RayNode rayOfHope = mRays[indexOfNewRay];
+		pRayCurr.insertRight(rayOfHope);
+		rayOfHope.setEnabled(true);
+		rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOffsetX() / mX.getScale(), getOffsetY() / mY.getScale()), getRotation(), mScale);
+
+		return pRayCurr; //
+	}
+
+	public RayNode makeSmootherLeft(final PhysicsWorld pWorld, RayNodeTagged pRayCurr, int raysAvailableLeft) {
+		int indexOfNewRay = pRayCurr.tag - raysAvailableLeft/2;
+		RayNode rayOfHope = mRays[indexOfNewRay];
+		pRayCurr.insertLeft(rayOfHope);
+		rayOfHope.setEnabled(true);
+		rayOfHope.cast(pWorld, mRaycastListener, mTmpVector.set(getOffsetX() / mX.getScale(), getOffsetY() / mY.getScale()), getRotation(), mScale);
+
+		return rayOfHope; //
+	}
+
+	private static float calculateDistance(RayNode rayA, RayNode rayB) {	
+		final float fractionA = rayA.fraction;
+		final float ya = rayA.dir.y * fractionA;
+		final float xa = rayA.dir.x * fractionA;
+
+		final float fractionB = rayB.fraction;
+		final float yb = rayB.dir.y * fractionB;
+		final float xb = rayB.dir.x * fractionB;
+
+		return MathUtils.distance(xa, ya, xb, yb);
 	}
 
 	private static float calculateAngle(RayNode pRayPrev, RayNode pRayCurr, RayNode pRayNext) {
@@ -282,36 +306,33 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 
 		final float prevAngle = MathUtils.radToDeg((float) Math.atan2(currY - prevY, currX - prevX));
 		final float nextAngle = MathUtils.radToDeg((float) Math.atan2(nextY - currY, nextX - currX));
-		return Math.abs(prevAngle - nextAngle);
+		
+		float ret = Math.abs(prevAngle - nextAngle);
+
+		return ret < 180 ? ret : 360 - ret;
 	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
 	public static interface IRaycastQualityJustifier {
-		boolean isGoodQuality(RayNode pRay, float pWavefrontAngle);
+		boolean isGoodQuality(RayNode pRay, float pWavefrontAngle, float distance);
 	}
 
-	public static class DefaultQualityJustifier implements IRaycastQualityJustifier {
-		/**
-		 * Arbitrarily chosen angle that provides reasonably smooth light cone
-		 * without too many casts 
-		 */
-		public static float DEFAULT_WAVEFRONT_ANGLE_THRESHOLD = 25f;
+	public static class RaycastQualityJustifier implements IRaycastQualityJustifier {
+		private float mAngle;
+		private float mDistance;
+		private float mPixelToMeterRatio;
 
-		private float mWavefrontAngleQualityThreshold;
-
-		public DefaultQualityJustifier() {
-			this(DEFAULT_WAVEFRONT_ANGLE_THRESHOLD);
-		}
-
-		public DefaultQualityJustifier(float pWavefrontAngleQualityThreshold) {
-			this.mWavefrontAngleQualityThreshold = pWavefrontAngleQualityThreshold;
+		public RaycastQualityJustifier(float pAngle, float pDistance, float pPixelToMeterRatio) {
+			this.mAngle = pAngle;
+			this.mDistance = pDistance;
+			this.mPixelToMeterRatio = pPixelToMeterRatio;
 		}
 
 		@Override
-		public boolean isGoodQuality(RayNode pRay, float pWavefrontAngle) {
-			return (pWavefrontAngle < mWavefrontAngleQualityThreshold);
+		public boolean isGoodQuality(RayNode pRay, float angle, float distance) {
+			return (distance < (mDistance/mPixelToMeterRatio)) && (angle < mAngle);
 		}
 	}
 }

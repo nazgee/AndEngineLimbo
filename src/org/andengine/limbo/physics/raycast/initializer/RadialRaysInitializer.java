@@ -14,15 +14,13 @@ public class RadialRaysInitializer extends RaysInitializer {
 	// Fields
 	// ===========================================================
 	private float mRadius;
-	private int mStepSize;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public RadialRaysInitializer(float pRadius, int pStepSize, int pRaysCount) {
+	public RadialRaysInitializer(float pRadius, int pRaysCount) {
 		super(pRaysCount);
 
-		this.mStepSize = pStepSize;
 		this.mRadius = pRadius;
 	}
 
@@ -49,15 +47,20 @@ public class RadialRaysInitializer extends RaysInitializer {
 
 	@Override
 	public void resetRays(RayNodeTagged[] pRays) {
-		int rayCount = pRays.length;
+		int count = pRays.length;
+		int quarter = count / 4;
 
-		for (int i = 0; i < rayCount; i++) {
+		for (int i = 0; i < count; i++) {
 			RayNodeTagged ray = pRays[i];
 			ray.reset();
-			ray.setEnabled((i % mStepSize) == 0);
+			ray.setEnabled((i % quarter) == 0);
 		}
-		pRays[rayCount-2].setEnabled(true);
-		pRays[rayCount-1].setEnabled(true);
+		pRays[count-1].setEnabled(true);
+	}
+
+	@Override
+	public boolean isCircular() {
+		return true;
 	}
 
 	// ===========================================================

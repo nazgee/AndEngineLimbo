@@ -1,7 +1,5 @@
 package org.andengine.limbo.mesh.dynamic.textured;
 
-import java.security.PublicKey;
-
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.limbo.mesh.dynamic.DynamicMesh;

@@ -36,6 +36,7 @@ public interface IRaysInitializer {
 	 * @return
 	 */
 	int getRaysNumber();
+	boolean isCircular();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

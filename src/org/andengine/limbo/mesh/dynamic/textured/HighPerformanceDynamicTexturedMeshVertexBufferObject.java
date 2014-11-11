@@ -1,7 +1,5 @@
 package org.andengine.limbo.mesh.dynamic.textured;
 
-import org.andengine.entity.primitive.Mesh;
-import org.andengine.entity.primitive.Rectangle;
 import org.andengine.limbo.mesh.FloatChain;
 import org.andengine.limbo.mesh.IUVMapper;
 import org.andengine.limbo.mesh.IXYProvider;
@@ -9,9 +7,6 @@ import org.andengine.limbo.mesh.dynamic.HighPerformanceDynamicMeshVertexBufferOb
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.attribute.VertexBufferObjectAttributes;
-import org.andengine.util.adt.color.Color;
-
-import android.util.Log;
 
 public class HighPerformanceDynamicTexturedMeshVertexBufferObject extends HighPerformanceDynamicMeshVertexBufferObject implements IDynamicTexturedMeshVertexBufferObject {
 	// ===========================================================
@@ -78,7 +73,14 @@ public class HighPerformanceDynamicTexturedMeshVertexBufferObject extends HighPe
 		for (int i = 0; i < verticesToDraw; i++) {
 			bufferData[i * DynamicTexturedMesh.VERTEX_SIZE + DynamicTexturedMesh.VERTEX_INDEX_X] = xs.getScaled(i);
 			bufferData[i * DynamicTexturedMesh.VERTEX_SIZE + DynamicTexturedMesh.VERTEX_INDEX_Y] = ys.getScaled(i);
-//			pMesh.attachChild(new Rectangle(xs.getScaled(i), ys.getScaled(i), 5, 5, getVertexBufferObjectManager()));
+//			Rectangle rect = new Rectangle(xs.getScaled(i), ys.getScaled(i), 5, 5, getVertexBufferObjectManager());
+//			if (i == 0) {
+//				rect.setColor(Color.GREEN);
+//			} else if (i <= 3) {
+//				rect.setColor(Color.RED);
+//				rect.setScale(4 - i);
+//			}
+//			pMesh.attachChild(rect);
 		}
 
 		this.setDirtyOnHardware();
