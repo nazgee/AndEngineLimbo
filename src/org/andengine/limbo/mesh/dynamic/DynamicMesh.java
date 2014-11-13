@@ -94,6 +94,10 @@ public class DynamicMesh extends Mesh {
 		super.draw(pGLState, pCamera);
 	}
 
+	public float getVertexColor(int i) {
+		return getColor().getABGRPackedFloat();
+	}
+
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

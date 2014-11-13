@@ -144,7 +144,7 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 
 		uvMapper.onUpdate(pSecondsElapsed);
 		if (uvMapper.isDirty()) {
-			onUpdateTextureCoordinates();
+			this.onUpdateTextureCoordinates();
 		}
 	}
 

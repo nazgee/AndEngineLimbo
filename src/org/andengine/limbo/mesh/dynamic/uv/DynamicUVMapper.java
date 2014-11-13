@@ -4,8 +4,10 @@ import org.andengine.limbo.mesh.UVMapper;
 import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.texture.region.ITextureRegion;
 
+import android.util.Log;
 
-abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
+
+public abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -17,8 +19,8 @@ abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicUVMapper(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProviderFan) {
-		super(pTextureRegion, pVertexProviderFan, pVertexProviderFan.getNumberOfVerticesMax());
+	public DynamicUVMapper(ITextureRegion pTextureRegion, IDynamicXYProvider pDynamicXYProvider) {
+		super(pTextureRegion, pDynamicXYProvider, pDynamicXYProvider.getNumberOfVerticesMax());
 	}
 
 	// ===========================================================

@@ -46,6 +46,23 @@ public class HighPerformanceDynamicMeshVertexBufferObject extends HighPerformanc
 
 		this.setDirtyOnHardware();
 	}
+
+	@Override
+	public void onUpdateColor(final Mesh pMesh) {
+		DynamicMesh dynmesh = (DynamicMesh) pMesh;
+		final float[] bufferData = this.mBufferData;
+		
+		//int verticesToDraw = dynmesh.xyProvider.getNumberOfVertices();
+		// XXX: Always updating Color for every vertex (not only those that will get drawn) might be slow
+		int verticesToDraw = dynmesh.xyProvider.getNumberOfVerticesMax();
+
+		for (int i = 0; i < verticesToDraw; i++) {
+			bufferData[(i * DynamicMesh.VERTEX_SIZE) + DynamicMesh.COLOR_INDEX] = dynmesh.getVertexColor(i);
+		}
+
+		this.setDirtyOnHardware();
+	}
+
 	// ===========================================================
 	// Fields
 	// ===========================================================

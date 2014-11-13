@@ -26,7 +26,6 @@ public interface IDynamicTexturedMeshVertexBufferObject extends IMeshVertexBuffe
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void onUpdateColor(final DynamicTexturedMesh pMesh);
 	public void onUpdateVertices(final DynamicTexturedMesh pMesh);
 	public void onUpdateTextureCoordinates(final DynamicTexturedMesh pMesh);
 

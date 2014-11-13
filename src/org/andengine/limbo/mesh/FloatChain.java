@@ -90,6 +90,7 @@ public class FloatChain {
 	public void shift() {
 		final int length = this.mCapacity - 1;
 		System.arraycopy(this.mValues, 0, this.mValues, 1, length);
+		mIndex = Math.min(this.mIndex+1, this.mCapacity);
 	}
 
 	private void assertIndex(final int pIndex) {

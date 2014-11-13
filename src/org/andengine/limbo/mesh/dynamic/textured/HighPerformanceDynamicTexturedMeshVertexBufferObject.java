@@ -1,8 +1,10 @@
 package org.andengine.limbo.mesh.dynamic.textured;
 
+import org.andengine.entity.primitive.Mesh;
 import org.andengine.limbo.mesh.FloatChain;
 import org.andengine.limbo.mesh.IUVMapper;
 import org.andengine.limbo.mesh.IXYProvider;
+import org.andengine.limbo.mesh.dynamic.DynamicMesh;
 import org.andengine.limbo.mesh.dynamic.HighPerformanceDynamicMeshVertexBufferObject;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -36,21 +38,16 @@ public class HighPerformanceDynamicTexturedMeshVertexBufferObject extends HighPe
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 	@Override
-	public void onUpdateColor(DynamicTexturedMesh pMesh) {
-		if (pMesh.xyProvider == null) {
-			return;
-		}
-
+	public void onUpdateColor(final Mesh pMesh) {
+		DynamicTexturedMesh dynmesh = (DynamicTexturedMesh) pMesh;
 		final float[] bufferData = this.mBufferData;
-
-		final float packedColor = pMesh.getColor().getABGRPackedFloat();
-
-		//int verticesToDraw = pMesh.xyProvider.getNumberOfVertices();
+		
+		//int verticesToDraw = dynmesh.xyProvider.getNumberOfVertices();
 		// XXX: Always updating Color for every vertex (not only those that will get drawn) might be slow
-		int verticesToDraw = pMesh.xyProvider.getNumberOfVerticesMax();
+		int verticesToDraw = dynmesh.xyProvider.getNumberOfVerticesMax();
 
 		for (int i = 0; i < verticesToDraw; i++) {
-			bufferData[i * DynamicTexturedMesh.VERTEX_SIZE + DynamicTexturedMesh.COLOR_INDEX] = packedColor;
+			bufferData[(i * DynamicTexturedMesh.VERTEX_SIZE) + DynamicTexturedMesh.COLOR_INDEX] = dynmesh.getVertexColor(i);
 		}
 
 		this.setDirtyOnHardware();
