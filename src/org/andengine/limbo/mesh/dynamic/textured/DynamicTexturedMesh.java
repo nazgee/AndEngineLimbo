@@ -3,6 +3,7 @@ package org.andengine.limbo.mesh.dynamic.textured;
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.limbo.mesh.dynamic.DynamicMesh;
+import org.andengine.limbo.mesh.dynamic.color.IDynamicColorProvider;
 import org.andengine.limbo.mesh.dynamic.uv.IDynamicUVMapper;
 import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.shader.PositionColorTextureCoordinatesShaderProgram;
@@ -47,21 +48,21 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 	// Constructors
 	// ===========================================================
 
-	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
+	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider, final IDynamicColorProvider pColorProvider,
 			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode, final ITextureRegion pTextureRegion,
 			final VertexBufferObjectManager pVertexBufferObjectManager, final DrawType pDrawType) {
 
-		this(pX, pY, pXYProvider, pUVMapper, pDrawMode, pTextureRegion, 
+		this(pX, pY, pXYProvider, pColorProvider, pUVMapper, pDrawMode, pTextureRegion, 
 				new HighPerformanceDynamicTexturedMeshVertexBufferObject(
 						pVertexBufferObjectManager, pXYProvider.getNumberOfVerticesMax() * DynamicTexturedMesh.VERTEX_SIZE,
 						pDrawType, true, DynamicTexturedMesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT));
 	}
 
-	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
+	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider, final IDynamicColorProvider pColorProvider,
 			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode, final ITextureRegion pTextureRegion,
 			final IDynamicTexturedMeshVertexBufferObject pMeshVertexBufferObject) {
 
-		super(pX, pY, pXYProvider, pDrawMode, pMeshVertexBufferObject);
+		super(pX, pY, pXYProvider, pColorProvider, pDrawMode, pMeshVertexBufferObject);
 		setShaderProgram(PositionColorTextureCoordinatesShaderProgram.getInstance());
 
 		pUVMapper.calculateUV();
@@ -91,6 +92,11 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 		return this.mTextureRegion;
 	}
 
+	@Override
+	public int getVertexSize() {
+		return DynamicTexturedMesh.VERTEX_SIZE;
+	}
+
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
@@ -113,16 +119,16 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 	}
 
 	@Override
-	protected void onUpdateColor() {
+	public void onUpdateColor() {
 		getDynamicTexturedMeshVertexBufferObject().onUpdateColor(this);
 	}
 
 	@Override
-	protected void onUpdateVertices() {
+	public void onUpdateVertices() {
 		getDynamicTexturedMeshVertexBufferObject().onUpdateVertices(this);
 	}
 
-	protected void onUpdateTextureCoordinates() {
+	public void onUpdateTextureCoordinates() {
 		getDynamicTexturedMeshVertexBufferObject().onUpdateTextureCoordinates(this);
 	}
 

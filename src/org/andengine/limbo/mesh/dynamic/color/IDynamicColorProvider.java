@@ -1,9 +1,11 @@
-package org.andengine.limbo.mesh;
+package org.andengine.limbo.mesh.dynamic.color;
 
-import com.badlogic.gdx.math.Vector2;
+import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.limbo.mesh.IColorProvider;
+import org.andengine.limbo.mesh.IXYProvider;
+import org.andengine.limbo.mesh.dynamic.IMutable;
 
-public interface IXYProvider {
-
+public interface IDynamicColorProvider extends IColorProvider, IUpdateHandler, IMutable{
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -27,15 +29,7 @@ public interface IXYProvider {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void calculateXY();
-	public FloatChain getX();
-	public FloatChain getY();
-	public int getNumberOfVertices();
-
-	public float calculateSegmenLength(int from, int to);
-	public float calculateSegmenX(int from, int to);
-	public float calculateSegmenY(int from, int to);
-	public Vector2 calculateSegmentDir(int from, int to);
+	public int getNumberOfVerticesMax();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

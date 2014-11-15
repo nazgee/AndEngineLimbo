@@ -3,6 +3,8 @@ package org.andengine.limbo.mesh;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.limbo.mesh.dynamic.DynamicMesh;
+import org.andengine.limbo.mesh.dynamic.color.DynamicColorProvider;
+import org.andengine.limbo.mesh.dynamic.color.IDynamicColorProvider;
 import org.andengine.limbo.mesh.dynamic.textured.DynamicTexturedMesh;
 import org.andengine.limbo.mesh.dynamic.uv.DynamicUVMapperCutout;
 import org.andengine.limbo.mesh.dynamic.xy.DynamicXYProviderFanRaycasting;
@@ -55,9 +57,10 @@ public class MeshFactory {
 		final DynamicXYProviderFanRaycasting xyProvider = new DynamicXYProviderFanRaycasting(
 				raysInitializer,new RaycastListener(), pPixelToMeter, pMaxRaysAngleDeviation, pMaxRaysOffset);
 		final DynamicUVMapperCutout uvMapper = new DynamicUVMapperCutout(pTexture, xyProvider, pScaleU, pScaleV, 0.5f, 0.5f);
+		final IDynamicColorProvider colorProvider = new DynamicColorProvider(xyProvider);
 
 		xyProvider.setPhysicsWorld(pWorld);
-		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProvider, uvMapper, DrawMode.TRIANGLE_FAN, pTexture, vbo, DrawType.STREAM) {
+		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProvider, colorProvider, uvMapper, DrawMode.TRIANGLE_FAN, pTexture, vbo, DrawType.STREAM) {
 			@Override
 			protected void onManagedUpdate(float pSecondsElapsed) {
 				DynamicXYProviderFanRaycasting raycaster = (DynamicXYProviderFanRaycasting)this.xyProvider;

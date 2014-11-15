@@ -18,7 +18,6 @@ public abstract class DynamicXYProviderFan extends DynamicXYProvider {
 	/**
 	 * Creates {@link DynamicXYProvider} with given number of border vertices. Additional +1 HUB vertex will be added.
 	 * @param pVertexCount number of border vertices.
-	 * @param b 
 	 */
 	public DynamicXYProviderFan(int pVertexCount) {
 		// hub + vertices
@@ -28,7 +27,7 @@ public abstract class DynamicXYProviderFan extends DynamicXYProvider {
 	// Getter & Setter
 	// ===========================================================
 
-	public void makeFanLoop() {
+	public void closeLoop() {
 		int toDraw = getNumberOfVertices();
 		if (toDraw >= (1+2)) {
 			mX.set(toDraw, mX.get(1));

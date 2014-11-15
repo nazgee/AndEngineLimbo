@@ -4,15 +4,11 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.DrawMode;
 import org.andengine.entity.primitive.Mesh;
 import org.andengine.entity.primitive.vbo.IMeshVertexBufferObject;
+import org.andengine.limbo.mesh.dynamic.color.IDynamicColorProvider;
 import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
-import org.andengine.opengl.shader.PositionColorShaderProgram;
-import org.andengine.opengl.shader.PositionColorTextureCoordinatesShaderProgram;
 import org.andengine.opengl.util.GLState;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.adt.color.Color;
-
-import android.opengl.GLES20;
 
 
 public class DynamicMesh extends Mesh {
@@ -23,28 +19,32 @@ public class DynamicMesh extends Mesh {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-
 	public IDynamicXYProvider xyProvider;
+	public IDynamicColorProvider colorProvider;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
+	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider, IDynamicColorProvider pColorProvider,
 			final DrawMode pDrawMode, final VertexBufferObjectManager pVertexBufferObjectManager,
 			final DrawType pDrawType) {
-		this(pX, pY, pXYProvider, pDrawMode,
+		this(pX, pY, pXYProvider, pColorProvider, pDrawMode,
 				new HighPerformanceDynamicMeshVertexBufferObject(pVertexBufferObjectManager,
 						new float[pXYProvider.getNumberOfVerticesMax() * VERTEX_SIZE], pXYProvider.getNumberOfVerticesMax(),
 						pDrawType, true, Mesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT)
 				);
 	}
 
-	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider,
+	public DynamicMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider, IDynamicColorProvider pColorProvider,
 			final DrawMode pDrawMode, final IMeshVertexBufferObject pMeshVertexBufferObject) {
 		super(pX, pY, 0, 0, pXYProvider.getNumberOfVerticesMax(), pDrawMode, pMeshVertexBufferObject);
 
 		pXYProvider.calculateXY();
 		this.xyProvider = pXYProvider;
+
+		pColorProvider.setBaseColor(getColor().getABGRPackedFloat());
+		pColorProvider.calculateColors();
+		this.colorProvider = pColorProvider;
 
 		this.setBlendingEnabled(true);
 		this.onUpdateVertices();
@@ -58,10 +58,29 @@ public class DynamicMesh extends Mesh {
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	public int getVertexSize() {
+		return DynamicMesh.VERTEX_SIZE;
+	}
 
+	public int getVertexIndexX() {
+		return DynamicMesh.VERTEX_INDEX_X;
+	}
+
+	public int getVertexIndexY() {
+		return DynamicMesh.VERTEX_INDEX_Y;
+	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
+	@Override
+	public void onUpdateColor() {
+		super.onUpdateColor();
+	}
+
+	@Override
+	public void onUpdateVertices() {
+		super.onUpdateVertices();
+	}
 
 	@Override
 	protected void onManagedUpdate(float pSecondsElapsed) {
@@ -69,14 +88,23 @@ public class DynamicMesh extends Mesh {
 
 		updateDynamics(pSecondsElapsed);
 		xyProvider.setDirty(false);
+		colorProvider.setDirty(false);
 	}
 
 	protected void updateDynamics(float pSecondsElapsed) {
+		colorProvider.setBaseColor(getColor().getABGRPackedFloat());
+
+		// XXX add it to a list so it can be made more generic
 		xyProvider.onUpdate(pSecondsElapsed);
+		colorProvider.onUpdate(pSecondsElapsed);
 
 		if (xyProvider.isDirty()) {
 			this.onUpdateVertices();
 			this.setVertexCountToDraw(xyProvider.getNumberOfVertices());
+		}
+
+		if (colorProvider.isDirty()) {
+			this.onUpdateColor();
 		}
 	}
 
@@ -92,10 +120,6 @@ public class DynamicMesh extends Mesh {
 	@Override
 	protected void draw(GLState pGLState, Camera pCamera) {
 		super.draw(pGLState, pCamera);
-	}
-
-	public float getVertexColor(int i) {
-		return getColor().getABGRPackedFloat();
 	}
 
 	// ===========================================================

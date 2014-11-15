@@ -114,7 +114,7 @@ public class DynamicXYProviderFanRaycasting extends DynamicXYProviderFan {
 				mY.add(ray.dir.y * ray.fraction);
 			}
 
-			makeFanLoop();
+			closeLoop();
 		}
 	}
 

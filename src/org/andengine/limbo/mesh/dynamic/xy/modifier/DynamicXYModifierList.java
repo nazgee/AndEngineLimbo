@@ -1,12 +1,22 @@
-package org.andengine.limbo.mesh;
+package org.andengine.limbo.mesh.dynamic.xy.modifier;
 
-import com.badlogic.gdx.math.Vector2;
+import org.andengine.entity.IEntity;
+import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
+import org.andengine.util.modifier.ModifierList;
 
-public interface IXYProvider {
-
+/**
+ * (c) 2010 Nicolas Gramlich
+ * (c) 2011 Zynga Inc.
+ *
+ * @author Nicolas Gramlich
+ * @since 14:19:18 - 24.12.2010
+ */
+public class DynamicXYModifierList extends ModifierList<IDynamicXYProvider> {
 	// ===========================================================
 	// Constants
 	// ===========================================================
+
+	private static final long serialVersionUID = 161652765736770082L;
 
 	// ===========================================================
 	// Fields
@@ -15,6 +25,14 @@ public interface IXYProvider {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	public DynamicXYModifierList(final IDynamicXYProvider pTarget) {
+		super(pTarget);
+	}
+
+	public DynamicXYModifierList(final IDynamicXYProvider pTarget, final int pCapacity) {
+		super(pTarget, pCapacity);
+	}
 
 	// ===========================================================
 	// Getter & Setter
@@ -27,15 +45,7 @@ public interface IXYProvider {
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	public void calculateXY();
-	public FloatChain getX();
-	public FloatChain getY();
-	public int getNumberOfVertices();
 
-	public float calculateSegmenLength(int from, int to);
-	public float calculateSegmenX(int from, int to);
-	public float calculateSegmenY(int from, int to);
-	public Vector2 calculateSegmentDir(int from, int to);
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

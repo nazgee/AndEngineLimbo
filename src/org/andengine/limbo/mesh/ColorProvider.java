@@ -1,11 +1,10 @@
 package org.andengine.limbo.mesh;
 
-import org.andengine.util.math.MathUtils;
-
-import com.badlogic.gdx.math.Vector2;
+import org.andengine.util.adt.color.Color;
 
 
-public abstract class XYProvider implements IXYProvider{
+
+public abstract class ColorProvider implements IColorProvider {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -13,16 +12,13 @@ public abstract class XYProvider implements IXYProvider{
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected final FloatChain mX;
-	protected final FloatChain mY;
-	private final Vector2 mTmpVec2 = new Vector2();
-
+	protected float mBaseColor = Color.WHITE_ABGR_PACKED_FLOAT;
+	protected FloatChain mColors;
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public XYProvider(int pVertexCount) {
-		this.mX = new FloatChain(pVertexCount);
-		this.mY = new FloatChain(pVertexCount);
+	public ColorProvider(int pVerticesCount) {
+		mColors = new FloatChain(pVerticesCount);
 	}
 
 	// ===========================================================
@@ -34,42 +30,22 @@ public abstract class XYProvider implements IXYProvider{
 	// ===========================================================
 	@Override
 	public int getNumberOfVertices() {
-		return this.mX.getSize();
+		return this.mColors.getSize();
 	}
 
 	@Override
-	public FloatChain getX() {
-		return this.mX;
+	public void setBaseColor(float pBaseColor) {
+		this.mBaseColor = pBaseColor;
 	}
 
 	@Override
-	public FloatChain getY() {
-		return this.mY;
+	public FloatChain getColors() {
+		return mColors;
 	}
 
-	@Override
-	public float calculateSegmenLength(int from, int to) {
-		return MathUtils.distance(mX.get(from), mY.get(from), mX.get(to), mY.get(to));
-	}
-
-	@Override
-	public float calculateSegmenX(int from, int to) {
-		return mX.get(to) - mX.get(from);
-	}
-
-	@Override
-	public float calculateSegmenY(int from, int to) {
-		return mY.get(to) - mY.get(from);
-	}
-
-	@Override
-	public Vector2 calculateSegmentDir(int from, int to) {
-		return mTmpVec2.set(calculateSegmenX(from, to), calculateSegmenY(from, to));
-	}
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
 
 	// ===========================================================
 	// Inner and Anonymous Classes

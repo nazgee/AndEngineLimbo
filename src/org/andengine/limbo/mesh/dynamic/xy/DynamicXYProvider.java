@@ -1,6 +1,9 @@
 package org.andengine.limbo.mesh.dynamic.xy;
 
+import org.andengine.limbo.mesh.FloatChain;
 import org.andengine.limbo.mesh.XYProvider;
+import org.andengine.limbo.mesh.dynamic.xy.modifier.DynamicXYModifierList;
+import org.andengine.limbo.mesh.dynamic.xy.modifier.IDynamicXYModifier;
 
 
 
@@ -13,6 +16,7 @@ public abstract class DynamicXYProvider extends XYProvider implements IDynamicXY
 	// Fields
 	// ===========================================================
 	protected boolean mIsDirty = false;
+	protected DynamicXYModifierList mModifiers;
 
 	// ===========================================================
 	// Constructors
@@ -38,6 +42,10 @@ public abstract class DynamicXYProvider extends XYProvider implements IDynamicXY
 		if (isDirty()) {
 			calculateXY();
 		}
+
+		if (mModifiers != null) {
+			mModifiers.onUpdate(pSecondsElapsed);
+		}
 	}
 	@Override
 	public void reset() {
@@ -55,7 +63,16 @@ public abstract class DynamicXYProvider extends XYProvider implements IDynamicXY
 	// ===========================================================
 	// Methods
 	// ===========================================================
+	private void allocateEntityModifiers() {
+		this.mModifiers = new DynamicXYModifierList(this, 2);
+	}
 
+	public void registerModifier(final IDynamicXYModifier pModifier) {
+		if (this.mModifiers == null) {
+			this.allocateEntityModifiers();
+		}
+		this.mModifiers.add(pModifier);
+	}
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================

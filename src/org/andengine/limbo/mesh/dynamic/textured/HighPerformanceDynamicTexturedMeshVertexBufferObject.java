@@ -1,14 +1,15 @@
 package org.andengine.limbo.mesh.dynamic.textured;
 
 import org.andengine.entity.primitive.Mesh;
+import org.andengine.entity.primitive.Rectangle;
 import org.andengine.limbo.mesh.FloatChain;
 import org.andengine.limbo.mesh.IUVMapper;
 import org.andengine.limbo.mesh.IXYProvider;
-import org.andengine.limbo.mesh.dynamic.DynamicMesh;
 import org.andengine.limbo.mesh.dynamic.HighPerformanceDynamicMeshVertexBufferObject;
 import org.andengine.opengl.vbo.DrawType;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.opengl.vbo.attribute.VertexBufferObjectAttributes;
+import org.andengine.util.adt.color.Color;
 
 public class HighPerformanceDynamicTexturedMeshVertexBufferObject extends HighPerformanceDynamicMeshVertexBufferObject implements IDynamicTexturedMeshVertexBufferObject {
 	// ===========================================================
@@ -42,12 +43,11 @@ public class HighPerformanceDynamicTexturedMeshVertexBufferObject extends HighPe
 		DynamicTexturedMesh dynmesh = (DynamicTexturedMesh) pMesh;
 		final float[] bufferData = this.mBufferData;
 		
-		//int verticesToDraw = dynmesh.xyProvider.getNumberOfVertices();
-		// XXX: Always updating Color for every vertex (not only those that will get drawn) might be slow
-		int verticesToDraw = dynmesh.xyProvider.getNumberOfVerticesMax();
+		int verticesToDraw = dynmesh.colorProvider.getNumberOfVertices();
+		//Log.e("onUpdateColor", "verticesToDraw=" + verticesToDraw );
 
 		for (int i = 0; i < verticesToDraw; i++) {
-			bufferData[(i * DynamicTexturedMesh.VERTEX_SIZE) + DynamicTexturedMesh.COLOR_INDEX] = dynmesh.getVertexColor(i);
+			bufferData[(i * DynamicTexturedMesh.VERTEX_SIZE) + DynamicTexturedMesh.COLOR_INDEX] = dynmesh.colorProvider.getColors().get(i);
 		}
 
 		this.setDirtyOnHardware();
@@ -66,18 +66,18 @@ public class HighPerformanceDynamicTexturedMeshVertexBufferObject extends HighPe
 		final FloatChain xs = verticesProvider.getX();
 		final FloatChain ys = verticesProvider.getY();
 
-//		pMesh.detachChildren();
+		pMesh.detachChildren();
 		for (int i = 0; i < verticesToDraw; i++) {
 			bufferData[i * DynamicTexturedMesh.VERTEX_SIZE + DynamicTexturedMesh.VERTEX_INDEX_X] = xs.getScaled(i);
 			bufferData[i * DynamicTexturedMesh.VERTEX_SIZE + DynamicTexturedMesh.VERTEX_INDEX_Y] = ys.getScaled(i);
-//			Rectangle rect = new Rectangle(xs.getScaled(i), ys.getScaled(i), 5, 5, getVertexBufferObjectManager());
-//			if (i == 0) {
-//				rect.setColor(Color.GREEN);
-//			} else if (i <= 3) {
-//				rect.setColor(Color.RED);
-//				rect.setScale(4 - i);
-//			}
-//			pMesh.attachChild(rect);
+			Rectangle rect = new Rectangle(xs.getScaled(i), ys.getScaled(i), 5, 5, getVertexBufferObjectManager());
+			if (i == 0) {
+				rect.setColor(Color.GREEN);
+			} else if (i <= 3) {
+				rect.setColor(Color.RED);
+				rect.setScale(4 - i);
+			}
+			pMesh.attachChild(rect);
 		}
 
 		this.setDirtyOnHardware();

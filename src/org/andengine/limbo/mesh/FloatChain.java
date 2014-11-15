@@ -37,10 +37,6 @@ public class FloatChain {
 		}
 	}
 
-	public int getIndex() {
-		return mIndex;
-	}
-
 	/**
 	 * 
 	 * @return Maximum number of entries this {@link FloatChain} can hold
@@ -71,7 +67,13 @@ public class FloatChain {
 		return this.mValues[pIndex];
 	}
 
+	public float[] getArray() {
+		return mValues;
+	}
 
+	public boolean isFull() {
+		return (this.mIndex == this.mCapacity);
+	}
 
 	public void set(final int pIndex, final float pValue) {
 		this.assertCapacity(pIndex);
@@ -106,7 +108,7 @@ public class FloatChain {
 	}
 
 	private void assertCapacity() {
-		if (this.mIndex == this.mCapacity) {
+		if (isFull()) {
 			throw new IllegalStateException("This " + this.getClass().getSimpleName() + " has already reached its capacity (" + this.mCapacity + ") !");
 		}
 	}

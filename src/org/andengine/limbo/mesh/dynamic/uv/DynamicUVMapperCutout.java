@@ -24,8 +24,8 @@ public class DynamicUVMapperCutout extends DynamicUVMapper {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicUVMapperCutout(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProviderFan) {
-		this(pTextureRegion, pVertexProviderFan, 1.0f, 1.0f, 0.5f, 0.5f);
+	public DynamicUVMapperCutout(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProvider) {
+		this(pTextureRegion, pVertexProvider, 1.0f, 1.0f, 0.5f, 0.5f);
 	}
 
 	public DynamicUVMapperCutout(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProviderFan, float pTextureScaleU, float pTextureScaleV, float pAnchorU, float pAnchorV) {

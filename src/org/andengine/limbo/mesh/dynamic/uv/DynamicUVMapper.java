@@ -4,8 +4,6 @@ import org.andengine.limbo.mesh.UVMapper;
 import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.texture.region.ITextureRegion;
 
-import android.util.Log;
-
 
 public abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapper {
 	// ===========================================================
@@ -15,6 +13,8 @@ public abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapp
 	// ===========================================================
 	// Fields
 	// ===========================================================
+	boolean mFlipU = false;
+	boolean mFlipV = false;
 
 	// ===========================================================
 	// Constructors
@@ -26,7 +26,21 @@ public abstract class DynamicUVMapper extends UVMapper implements IDynamicUVMapp
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
+	public boolean isFlipU() {
+		return mFlipU;
+	}
 
+	public void setFlipU(boolean pFlip) {
+		this.mFlipU = pFlip;
+	}
+
+	public boolean isFlipV() {
+		return mFlipV;
+	}
+
+	public void setFlipV(boolean pFlip) {
+		this.mFlipV = pFlip;
+	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
