@@ -92,7 +92,7 @@ public abstract class BasePositioner {
 	}
 
 	public void placeBelowOf(IEntity pImmovable, IEntity pMovable) {
-		placeTopOf(pImmovable, pMovable, 0, 0);
+		placeBelowOf(pImmovable, pMovable, 0, 0);
 	}
 	public void placeBelowOf(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
 		placeVertical(pImmovable, pMovable, eAnchorPointsPair.VER_BTM_C.relation, tx, ty);
