@@ -60,7 +60,7 @@ public class MeshFactory {
 		final IDynamicColorProvider colorProvider = new DynamicColorProvider(xyProvider);
 
 		xyProvider.setPhysicsWorld(pWorld);
-		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProvider, colorProvider, uvMapper, DrawMode.TRIANGLE_FAN, pTexture, vbo, DrawType.STREAM) {
+		DynamicTexturedMesh mesh = new DynamicTexturedMesh(0, 0, xyProvider, colorProvider, uvMapper, DrawMode.TRIANGLE_FAN, vbo, DrawType.STREAM) {
 			@Override
 			protected void onManagedUpdate(float pSecondsElapsed) {
 				DynamicXYProviderFanRaycasting raycaster = (DynamicXYProviderFanRaycasting)this.xyProvider;

@@ -4,9 +4,10 @@ import org.andengine.limbo.mesh.FloatChain;
 import org.andengine.limbo.mesh.UVMapperUtils;
 import org.andengine.limbo.mesh.dynamic.xy.IDynamicXYProvider;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.util.math.MathUtils;
 
 
-public class DynamicUVMapperCutout extends DynamicUVMapper {
+public class DynamicUVMapperFan extends DynamicUVMapper {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -14,24 +15,17 @@ public class DynamicUVMapperCutout extends DynamicUVMapper {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	protected float mTextureScaleU;
-	protected float mTextureScaleV;
-	protected float mAnchorU;
-	protected float mAnchorV;
+
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	public DynamicUVMapperCutout(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProvider) {
+	public DynamicUVMapperFan(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProvider) {
 		this(pTextureRegion, pVertexProvider, 1.0f, 1.0f, 0.5f, 0.5f);
 	}
 
-	public DynamicUVMapperCutout(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProviderFan, float pTextureScaleU, float pTextureScaleV, float pAnchorU, float pAnchorV) {
+	public DynamicUVMapperFan(ITextureRegion pTextureRegion, IDynamicXYProvider pVertexProviderFan, float pTextureScaleU, float pTextureScaleV, float pAnchorU, float pAnchorV) {
 		super(pTextureRegion, pVertexProviderFan);
-		this.mTextureScaleU = pTextureScaleU;
-		this.mTextureScaleV = pTextureScaleV;
-		this.mAnchorU = pAnchorU;
-		this.mAnchorV = pAnchorV;
 	}
 
 	// ===========================================================
@@ -46,26 +40,29 @@ public class DynamicUVMapperCutout extends DynamicUVMapper {
 		final FloatChain xs = mVertexProvider.getX();
 		final FloatChain ys = mVertexProvider.getY();
 		final int verticesToDraw = mVertexProvider.getNumberOfVertices();
-
+		if (verticesToDraw == 0) {
+			return;
+		}
+	
 		mU.clear();
 		mV.clear();
-
-		for (int i = 0; i < verticesToDraw; i++) {
-			mU.add(calculateU(xs.getScaled(i)));
-			mV.add(calculateV(ys.getScaled(i)));
-		}
-	}
 	
-	protected float calculateU(float pX) {
-		float w = mTextureRegion.getWidth() * mTextureScaleU;
-		float u = (pX + mAnchorU * w) / w;
-		return UVMapperUtils.mapUToRegion(mTextureRegion, u);
-	}
-
-	protected float calculateV(float pY) {
-		float h = mTextureRegion.getHeight() * mTextureScaleV;
-		float v = (-pY + mAnchorV * h) / h;
-		return UVMapperUtils.mapVToRegion(mTextureRegion, v);
+		float x0 = xs.getScaled(0);
+		float y0 = ys.getScaled(0);
+		mU.add(UVMapperUtils.mapUToRegion(mTextureRegion, 0.5f));
+		mV.add(UVMapperUtils.mapVToRegion(mTextureRegion, 0.5f));
+	
+		float dx = 0;
+		float dy = 0;
+		float len = 0;
+		for (int i = 1; i < verticesToDraw; i++) {
+			dx = xs.getScaled(i) - x0;
+			dy = ys.getScaled(i) - y0;
+			len = MathUtils.length(dx, dy);
+	
+			mU.add(UVMapperUtils.mapUToRegion(mTextureRegion, 0.5f + dx/len*0.5f));
+			mV.add(UVMapperUtils.mapVToRegion(mTextureRegion, 0.5f + dy/len*0.5f));
+		}
 	}
 
 	// ===========================================================

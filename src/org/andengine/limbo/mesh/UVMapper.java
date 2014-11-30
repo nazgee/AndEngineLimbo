@@ -50,6 +50,13 @@ public abstract class UVMapper implements IUVMapper {
 		return this.mU;
 	}
 
+	@Override
+	public ITextureRegion getTextureRegion() {
+		return mTextureRegion;
+	}
+
+	
+
 	// ===========================================================
 	// Methods
 	// ===========================================================

@@ -1,4 +1,7 @@
 package org.andengine.limbo.mesh;
+
+import org.andengine.opengl.texture.region.ITextureRegion;
+
 public interface IUVMapper {
 
 	// ===========================================================
@@ -28,6 +31,7 @@ public interface IUVMapper {
 	public FloatChain getU();
 	public FloatChain getV();
 	public int getNumberOfVertices();
+	public ITextureRegion getTextureRegion();
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

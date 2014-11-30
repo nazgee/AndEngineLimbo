@@ -96,6 +96,15 @@ public class BasicCollisionListener implements ICollisionListener {
 		return (bodyA == pFirstCollidingBody && bodyB == pSecondCollidingBody) || (bodyA == pSecondCollidingBody && bodyB == pFirstCollidingBody);
 	}
 
+	public static boolean areInvolved(Contact pContact, Fixture pFixture, Body pBody) {
+		Fixture fixtureA = pContact.getFixtureA();
+		Fixture fixtureB = pContact.getFixtureB();
+		Body bodyA = fixtureA.getBody();
+		Body bodyB = fixtureB.getBody();
+		return (	bodyA == pBody && fixtureB == pFixture) 
+				|| (bodyB == pBody && fixtureA == pFixture);
+	}
+
 	public static Body getOther(Contact pContact, Body pBody) {
 		Body bodyA = pContact.getFixtureA().getBody();
 		Body bodyB = pContact.getFixtureB().getBody();

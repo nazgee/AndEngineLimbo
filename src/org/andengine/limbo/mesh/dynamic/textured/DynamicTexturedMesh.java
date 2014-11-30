@@ -49,17 +49,17 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 	// ===========================================================
 
 	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider, final IDynamicColorProvider pColorProvider,
-			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode, final ITextureRegion pTextureRegion,
+			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode,
 			final VertexBufferObjectManager pVertexBufferObjectManager, final DrawType pDrawType) {
 
-		this(pX, pY, pXYProvider, pColorProvider, pUVMapper, pDrawMode, pTextureRegion, 
+		this(pX, pY, pXYProvider, pColorProvider, pUVMapper, pDrawMode, 
 				new HighPerformanceDynamicTexturedMeshVertexBufferObject(
 						pVertexBufferObjectManager, pXYProvider.getNumberOfVerticesMax() * DynamicTexturedMesh.VERTEX_SIZE,
 						pDrawType, true, DynamicTexturedMesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT));
 	}
 
 	public DynamicTexturedMesh(final float pX, final float pY, final IDynamicXYProvider pXYProvider, final IDynamicColorProvider pColorProvider,
-			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode, final ITextureRegion pTextureRegion,
+			final IDynamicUVMapper pUVMapper, final DrawMode pDrawMode,
 			final IDynamicTexturedMeshVertexBufferObject pMeshVertexBufferObject) {
 
 		super(pX, pY, pXYProvider, pColorProvider, pDrawMode, pMeshVertexBufferObject);
@@ -67,11 +67,11 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 
 		pUVMapper.calculateUV();
 		this.uvMapper = pUVMapper;
-		this.mTextureRegion = pTextureRegion;
+		this.mTextureRegion = pUVMapper.getTextureRegion();
 
-		if( pTextureRegion != null)
+		if( pUVMapper.getTextureRegion() != null)
 		{
-			this.initBlendFunction(pTextureRegion);
+			this.initBlendFunction(pUVMapper.getTextureRegion());
 			this.onUpdateTextureCoordinates();
 		}
 
