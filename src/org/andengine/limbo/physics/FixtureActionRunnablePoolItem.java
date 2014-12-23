@@ -1,9 +1,8 @@
 package org.andengine.limbo.physics;
 
-import org.andengine.limbo.physics.Actions.BodyAction;
+import org.andengine.limbo.physics.Actions.FixtureAction;
 
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 /**
  * (c) 2010 Nicolas Gramlich
@@ -12,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
  *
  * @author Michal Stawinski
  */
-public class BodyActionRunnablePoolItem extends ActionRunnablePoolItem<Body, BodyAction> {
+public class FixtureActionRunnablePoolItem extends ActionRunnablePoolItem<Fixture, FixtureAction> {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -35,28 +34,16 @@ public class BodyActionRunnablePoolItem extends ActionRunnablePoolItem<Body, Bod
 
 	@Override
 	public void run() {
-		World world = this.mItem.getWorld();
-
 		if (this.mCallback != null) {
 			this.mCallback.onCallback(this.mItem);
 		}
 
 		switch (mAction) {
-		case ACTIVATE:
-			this.mItem.setActive(true);
+		case SENSORIZE:
+			this.mItem.setSensor(true);
 			break;
-		case DEACTIVATE:
-			this.mItem.setActive(false);
-			break;
-		case DESTROY:
-			mItem.getUserData();
-			world.destroyBody(mItem);
-			break;
-		case AWAKE:
-			this.mItem.setAwake(true);
-			break;
-		case SLEEP:
-			this.mItem.setAwake(false);
+		case DESENSORIZE:
+			this.mItem.setSensor(false);
 			break;
 		}
 	}

@@ -1,9 +1,9 @@
 package org.andengine.limbo.physics;
 
-import org.andengine.limbo.physics.Actions.BodyAction;
+import org.andengine.limbo.physics.Actions.FixtureAction;
 import org.andengine.util.call.Callback;
 
-import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 /**
  * (c) 2010 Nicolas Gramlich
@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.Body;
  *
  * @author Michal Stawinski
  */
-public class BodyActionRunnablePoolUpdateHandler extends ActionRunnablePoolUpdateHandler<Body, BodyAction, BodyActionRunnablePoolItem> {
+public class FixtureActionRunnablePoolUpdateHandler extends ActionRunnablePoolUpdateHandler<Fixture, FixtureAction, FixtureActionRunnablePoolItem> {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -25,19 +25,19 @@ public class BodyActionRunnablePoolUpdateHandler extends ActionRunnablePoolUpdat
 	// Constructors
 	// ===========================================================
 
-	public BodyActionRunnablePoolUpdateHandler() {
+	public FixtureActionRunnablePoolUpdateHandler() {
 		super();
 	}
 
-	public BodyActionRunnablePoolUpdateHandler(final int pInitialPoolSize) {
+	public FixtureActionRunnablePoolUpdateHandler(final int pInitialPoolSize) {
 		super(pInitialPoolSize);
 	}
 
-	public BodyActionRunnablePoolUpdateHandler(final int pInitialPoolSize, final int pGrowth) {
+	public FixtureActionRunnablePoolUpdateHandler(final int pInitialPoolSize, final int pGrowth) {
 		super(pInitialPoolSize, pGrowth);
 	}
 
-	public BodyActionRunnablePoolUpdateHandler(final int pInitialPoolSize, final int pGrowth, final int pAvailableItemCountMaximum) {
+	public FixtureActionRunnablePoolUpdateHandler(final int pInitialPoolSize, final int pGrowth, final int pAvailableItemCountMaximum) {
 		super(pInitialPoolSize, pGrowth, pAvailableItemCountMaximum);
 	}
 
@@ -50,8 +50,8 @@ public class BodyActionRunnablePoolUpdateHandler extends ActionRunnablePoolUpdat
 	// ===========================================================
 
 	@Override
-	protected BodyActionRunnablePoolItem onAllocatePoolItem() {
-		return new BodyActionRunnablePoolItem();
+	protected FixtureActionRunnablePoolItem onAllocatePoolItem() {
+		return new FixtureActionRunnablePoolItem();
 	}
 
 	// ===========================================================
@@ -59,12 +59,12 @@ public class BodyActionRunnablePoolUpdateHandler extends ActionRunnablePoolUpdat
 	// ===========================================================
 
 	/**
-	 * @param pEntity the @{link Body} to be detached safely.
+	 * @param pEntity the @{link Fixture} to be detached safely.
 	 * @param pCallback will be called after the @{link IEntity} actually was detached.
 	 */
-	public void scheduleAction(final Body pBody, BodyAction pAction, final Callback<Body> pCallback) {
-		final BodyActionRunnablePoolItem item = this.obtainPoolItem();
-		item.setItem(pBody);
+	public void scheduleAction(final Fixture pFixture, FixtureAction pAction, final Callback<Fixture> pCallback) {
+		final FixtureActionRunnablePoolItem item = this.obtainPoolItem();
+		item.setItem(pFixture);
 		item.setAction(pAction);
 		item.setCallback(pCallback);
 		this.postPoolItem(item);

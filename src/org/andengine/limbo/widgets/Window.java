@@ -11,6 +11,7 @@ import org.andengine.util.Constants;
 import org.andengine.util.adt.list.SmartList;
 
 import android.util.SparseArray;
+import android.view.MotionEvent;
 
 /**
  * (c) 2013 Michal Stawinski (nazgee)
@@ -166,6 +167,29 @@ public class Window extends Entity {
 
 	public void setOnAreaTouchTraversalFrontToBack() {
 		this.mOnAreaTouchTraversalBackToFront = false;
+	}
+
+	public boolean cancelTouchEvent(final TouchEvent pSceneTouchEvent) {
+		final TouchEvent touchEvent = TouchEvent.obtain(
+				pSceneTouchEvent.getX(), pSceneTouchEvent.getY(),
+				TouchEvent.ACTION_CANCEL, 
+				pSceneTouchEvent.getPointerID(),
+				pSceneTouchEvent.getMotionEvent());
+
+		Boolean handled = null;
+		final SparseArray<ITouchArea> touchAreaBindings = this.mTouchAreaBindings;
+		final ITouchArea boundTouchArea = touchAreaBindings.get(pSceneTouchEvent.getPointerID());
+		if (boundTouchArea != null) {
+			handled = this.onAreaTouchEvent(touchEvent, touchEvent.getX(), touchEvent.getY(), boundTouchArea);
+		}
+		touchAreaBindings.remove(pSceneTouchEvent.getPointerID());
+
+		TouchEvent.recycle(touchEvent);
+		if (handled != null && handled) { 
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {

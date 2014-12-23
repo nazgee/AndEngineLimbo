@@ -1,9 +1,7 @@
 package org.andengine.limbo.physics;
 
-import org.andengine.limbo.physics.Actions.BodyAction;
-
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import org.andengine.util.adt.pool.RunnablePoolItem;
+import org.andengine.util.call.Callback;
 
 /**
  * (c) 2010 Nicolas Gramlich
@@ -12,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
  *
  * @author Michal Stawinski
  */
-public class BodyActionRunnablePoolItem extends ActionRunnablePoolItem<Body, BodyAction> {
+public abstract class ActionRunnablePoolItem<T, A> extends RunnablePoolItem {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -20,6 +18,10 @@ public class BodyActionRunnablePoolItem extends ActionRunnablePoolItem<Body, Bod
 	// ===========================================================
 	// Fields
 	// ===========================================================
+
+	protected T mItem;
+	protected Callback<T> mCallback;
+	protected A mAction;
 
 	// ===========================================================
 	// Constructors
@@ -29,36 +31,27 @@ public class BodyActionRunnablePoolItem extends ActionRunnablePoolItem<Body, Bod
 	// Getter & Setter
 	// ===========================================================
 
+	public void setItem(final T pItem) {
+		this.mItem = pItem;
+	}
+
+	/**
+	 * Sets up a callback which will get called right after detaching entity
+	 * @param pCallback gets called right after detaching entity; if null nothing will be called
+	 */
+	public void setCallback(final Callback<T> pCallback) {
+		this.mCallback = pCallback;
+	}
+
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
 
 	@Override
-	public void run() {
-		World world = this.mItem.getWorld();
+	abstract public void run();
 
-		if (this.mCallback != null) {
-			this.mCallback.onCallback(this.mItem);
-		}
-
-		switch (mAction) {
-		case ACTIVATE:
-			this.mItem.setActive(true);
-			break;
-		case DEACTIVATE:
-			this.mItem.setActive(false);
-			break;
-		case DESTROY:
-			mItem.getUserData();
-			world.destroyBody(mItem);
-			break;
-		case AWAKE:
-			this.mItem.setAwake(true);
-			break;
-		case SLEEP:
-			this.mItem.setAwake(false);
-			break;
-		}
+	public void setAction(A pAction) {
+		this.mAction = pAction;
 	}
 
 	// ===========================================================
@@ -68,5 +61,4 @@ public class BodyActionRunnablePoolItem extends ActionRunnablePoolItem<Body, Bod
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
-
 }
