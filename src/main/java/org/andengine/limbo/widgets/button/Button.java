@@ -108,6 +108,31 @@ public class Button extends Entity {
 		attachDefaultFace();
 		this.mState = State.NORMAL;
 	}
+
+	/**
+	 * Creates a button using provided entities as faces representing Button states
+	 *
+	 * @note Supplied entities will be moved to the center of Button
+	 * @param pNormal
+	 * @param pPressed
+	 * @param pDisabled
+	 */
+	public Button(final IEntity pNormal, final IEntity pPressed, final IEntity pDisabled) {
+
+		setSize(pNormal.getWidth(), pNormal.getHeight());
+		if (pNormal == null) {
+			throw new AndEngineRuntimeException("pNormal button face is null");
+		}
+
+		this.mEntities[State.NORMAL.getEntityIndex()] = pNormal;
+		this.mEntities[State.PRESSED.getEntityIndex()] = pPressed;
+		this.mEntities[State.DISABLED.getEntityIndex()] = pDisabled;
+
+		centerEntities(getWidth(), getHeight());
+
+		attachDefaultFace();
+		this.mState = State.NORMAL;
+	}
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
