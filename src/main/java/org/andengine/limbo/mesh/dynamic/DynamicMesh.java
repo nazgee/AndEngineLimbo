@@ -86,7 +86,9 @@ public class DynamicMesh extends Mesh {
 	protected void onManagedUpdate(float pSecondsElapsed) {
 		super.onManagedUpdate(pSecondsElapsed);
 
-		updateDynamics(pSecondsElapsed);
+		if (isVisible()) {
+			updateDynamics(pSecondsElapsed);
+		}
 		xyProvider.setDirty(false);
 		colorProvider.setDirty(false);
 	}
