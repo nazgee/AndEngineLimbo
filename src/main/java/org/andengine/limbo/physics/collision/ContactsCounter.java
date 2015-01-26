@@ -41,7 +41,10 @@ public class ContactsCounter implements ICollisionDetector {
 	}
 
 	public int decContactsCount() {
-		return mContactsCount--;
+		if (mContactsCount > 0) {
+			mContactsCount--;
+		}
+		return mContactsCount;
 	}
 	// ===========================================================
 	// Inner and Anonymous Classes

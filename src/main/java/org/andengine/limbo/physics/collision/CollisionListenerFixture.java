@@ -16,6 +16,7 @@ public class CollisionListenerFixture extends BasicCollisionListener {
 	// ===========================================================
 	protected final Fixture mFixture;
 	protected final ContactsCounter mContactsCounter = new ContactsCounter();
+	protected boolean collideWithSensors = false;
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -37,7 +38,9 @@ public class CollisionListenerFixture extends BasicCollisionListener {
 	@Override
 	public void beginContact(Contact contact) {
 		if (isInvolved(contact, mFixture)) {
-			mContactsCounter.incContactsCount();
+			if (collideWithSensors || !getOther(contact, mFixture).isSensor()) {
+				mContactsCounter.incContactsCount();
+			}
 		}
 	}
 
