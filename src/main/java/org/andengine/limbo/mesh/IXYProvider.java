@@ -33,9 +33,6 @@ public interface IXYProvider {
 	public int getNumberOfVertices();
 
 	public float calculateSegmenLength(int from, int to);
-	public float calculateSegmenX(int from, int to);
-	public float calculateSegmenY(int from, int to);
-	public Vector2 calculateSegmentDir(int from, int to);
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================

@@ -2,8 +2,6 @@ package org.andengine.limbo.mesh;
 
 import org.andengine.util.math.MathUtils;
 
-import com.badlogic.gdx.math.Vector2;
-
 
 public abstract class XYProvider implements IXYProvider{
 	// ===========================================================
@@ -15,7 +13,6 @@ public abstract class XYProvider implements IXYProvider{
 	// ===========================================================
 	protected final FloatChain mX;
 	protected final FloatChain mY;
-	private final Vector2 mTmpVec2 = new Vector2();
 
 	// ===========================================================
 	// Constructors
@@ -52,20 +49,6 @@ public abstract class XYProvider implements IXYProvider{
 		return MathUtils.distance(mX.get(from), mY.get(from), mX.get(to), mY.get(to));
 	}
 
-	@Override
-	public float calculateSegmenX(int from, int to) {
-		return mX.get(to) - mX.get(from);
-	}
-
-	@Override
-	public float calculateSegmenY(int from, int to) {
-		return mY.get(to) - mY.get(from);
-	}
-
-	@Override
-	public Vector2 calculateSegmentDir(int from, int to) {
-		return mTmpVec2.set(calculateSegmenX(from, to), calculateSegmenY(from, to));
-	}
 	// ===========================================================
 	// Methods
 	// ===========================================================
