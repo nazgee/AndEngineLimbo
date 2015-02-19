@@ -227,7 +227,7 @@ public class Button extends Entity {
 				doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
 			}
 		} else if (pSceneTouchEvent.isActionCancel() || !this.contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
-			this.changeState(State.NORMAL);
+			doCancelled();
 		} else if (pSceneTouchEvent.isActionUp() && this.mState == State.PRESSED && !this.mIsBistable) {
 			doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
 		}
@@ -235,7 +235,11 @@ public class Button extends Entity {
 		return true;
 	}
 
-	private void doUnpressed(final float pTouchAreaLocalX,
+	protected void doCancelled() {
+		this.changeState(State.NORMAL);
+	}
+
+	protected void doUnpressed(final float pTouchAreaLocalX,
 			final float pTouchAreaLocalY) {
 		this.changeState(State.NORMAL);
 
@@ -244,7 +248,7 @@ public class Button extends Entity {
 		}
 	}
 
-	private void doPressedDown(final float pTouchAreaLocalX,
+	protected void doPressedDown(final float pTouchAreaLocalX,
 			final float pTouchAreaLocalY) {
 		this.changeState(State.PRESSED);
 
