@@ -54,6 +54,7 @@ public class ManagedRenderTexture extends RenderTexture {
 	 * This variant of {@link RenderTexture#loadToHardware(GLState)} assures that this {@link ManagedRenderTexture} 
 	 * is correctly initialized when {@link ManagedRenderTexture#safeInit(GLState)} is called
 	 */
+	@Override
 	public void loadToHardware(GLState pGLState) throws IOException {
 		if (isInitialized()) {
 			destroy(pGLState);
@@ -62,9 +63,9 @@ public class ManagedRenderTexture extends RenderTexture {
 	}
 
 	@Override
-	public void begin(final GLState pGLState, final boolean pFlipX, final boolean pFlipY, final float pRed, final float pGreen, final float pBlue, final float pAlpha) {
+	public void begin(final GLState pGLState, final boolean pFlipX, final boolean pFlipY) {
 		safeInit(pGLState);
-		super.begin(pGLState, pFlipX, pFlipY, pRed, pGreen, pBlue, pAlpha);
+		super.begin(pGLState, pFlipX, pFlipY);
 	}
 
 	// ===========================================================
