@@ -60,8 +60,8 @@ public class RenderSprite extends Sprite {
 				drawChildren(pGLState, pCamera, children);
 				postDrawChildren(pGLState, pCamera, children);
 			}
+			mRenderTexture.end(pGLState);
 		}
-		mRenderTexture.end(pGLState);
 
 		/* Draw self. */
 		drawSelf(pGLState, pCamera);
