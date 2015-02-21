@@ -1,6 +1,7 @@
 package org.andengine.limbo.opengl;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
 import org.andengine.entity.ZIndexSorter;
 import org.andengine.entity.sprite.Sprite;
@@ -19,14 +20,21 @@ public class RenderSprite extends Sprite {
 	// Fields
 	// ===========================================================
 	private final ManagedRenderTexture mRenderTexture;
+	private final Camera dummyCamera;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 
-	//public RenderSprite(int width, int height, int textureWidht, int textureHeight, ManagedRenderTexture mRenderTexture, VertexBufferObjectManager vbom) {
 	public RenderSprite(float x, float y, float width, float height, ManagedRenderTexture renderTexture, VertexBufferObjectManager vbom) {
 		super(x, y, width, height, TextureRegionFactory.extractFromTexture(renderTexture), vbom);
+
+		{
+			int w = renderTexture.getWidth();
+			int h = renderTexture.getHeight();
+			dummyCamera = new Camera(-width/2, -height/2, width, height);
+			dummyCamera.setSurfaceSize(0, 0, w, h);
+		}
 
 		setFlippedVertical(true);
 		mRenderTexture = (ManagedRenderTexture) getTextureRegion().getTexture();
@@ -40,32 +48,34 @@ public class RenderSprite extends Sprite {
 	// ===========================================================
 	@Override
 	protected void onManagedDraw(GLState pGLState, Camera pCamera) {
+
 		pGLState.pushModelViewGLMatrix();
 		{
-			this.onApplyTransformations(pGLState);
-			pGLState.pushModelViewGLMatrix();
-			mRenderTexture.begin(pGLState);
-			pCamera.onApplySceneMatrix(pGLState);
-			pGLState.popModelViewGLMatrix();
+			onApplyTransformations(pGLState);
 
-			final SmartList<IEntity> children = this.mChildren;
-			if ((children != null) && this.mChildrenVisible) {
-				if (this.mChildrenSortPending) {
-					ZIndexSorter.getInstance().sort(this.mChildren);
-					this.mChildrenSortPending = false;
+			mRenderTexture.begin(pGLState);  // push MVP
+			{
+				float bufferScaleX = mRenderTexture.getWidth() / getWidth();
+				float bufferScaleY = mRenderTexture.getHeight() / getHeight();
+				pGLState.scaleModelViewGLMatrixf(bufferScaleX, bufferScaleY, 1);
+
+				final SmartList<IEntity> children = this.mChildren;
+				if ((children != null) && this.mChildrenVisible) {
+					if (this.mChildrenSortPending) {
+						ZIndexSorter.getInstance().sort(this.mChildren);
+						this.mChildrenSortPending = false;
+					}
+
+					preDrawChildren(pGLState, dummyCamera, children);
+					drawChildren(pGLState, dummyCamera, children);
+					postDrawChildren(pGLState, dummyCamera, children);
 				}
-
-
-				preDrawChildren(pGLState, pCamera, children);
-				drawChildren(pGLState, pCamera, children);
-				postDrawChildren(pGLState, pCamera, children);
 			}
-			mRenderTexture.end(pGLState);
+			mRenderTexture.end(pGLState);	// pop MVP
+
+			/* Draw self. */
+			drawSelf(pGLState, pCamera);
 		}
-
-		/* Draw self. */
-		drawSelf(pGLState, pCamera);
-
 		pGLState.popModelViewGLMatrix();
 	}
 
@@ -95,5 +105,4 @@ public class RenderSprite extends Sprite {
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
-
 }
