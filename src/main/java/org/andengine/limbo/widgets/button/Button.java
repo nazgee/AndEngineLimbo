@@ -226,10 +226,15 @@ public class Button extends Entity {
 			} else {
 				doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
 			}
-		} else if (pSceneTouchEvent.isActionCancel() || !this.contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
+		} else if (pSceneTouchEvent.isActionCancel()) {
 			doCancelled();
-		} else if (pSceneTouchEvent.isActionUp() && this.mState == State.PRESSED && !this.mIsBistable) {
-			doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
+		} else if (pSceneTouchEvent.isActionUp()) {
+			boolean contains = this.contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
+			if (	this.mState == State.PRESSED && !this.mIsBistable && contains) {
+				doUnpressed(pTouchAreaLocalX, pTouchAreaLocalY);
+			} else if (!contains) {
+				doCancelled();
+			}
 		}
 
 		return true;
