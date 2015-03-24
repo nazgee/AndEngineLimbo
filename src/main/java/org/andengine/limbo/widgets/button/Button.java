@@ -5,6 +5,7 @@ import org.andengine.entity.IEntity;
 import org.andengine.entity.sprite.NineSliceSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.limbo.utils.positioner.PositionerImmovableRelative;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
@@ -107,7 +108,16 @@ public class Button extends Entity {
 		this.mEntities[State.PRESSED.getEntityIndex()] = pPressed;
 		this.mEntities[State.DISABLED.getEntityIndex()] = pDisabled;
 
-		centerEntities(pWidth, pHeight);
+		// initial positioning
+		{
+			attachChild(pNormal);
+			attachChild(pPressed);
+			attachChild(pDisabled);
+			centerEntities(getWidth(), getHeight());
+			detachChild(pNormal);
+			detachChild(pPressed);
+			detachChild(pDisabled);
+		}
 
 		attachDefaultFace();
 		this.mState = State.NORMAL;
@@ -132,7 +142,16 @@ public class Button extends Entity {
 		this.mEntities[State.PRESSED.getEntityIndex()] = pPressed;
 		this.mEntities[State.DISABLED.getEntityIndex()] = pDisabled;
 
-		centerEntities(getWidth(), getHeight());
+		// initial positioning
+		{
+			attachChild(pNormal);
+			attachChild(pPressed);
+			attachChild(pDisabled);
+			centerEntities(getWidth(), getHeight());
+			detachChild(pNormal);
+			detachChild(pPressed);
+			detachChild(pDisabled);
+		}
 
 		attachDefaultFace();
 		this.mState = State.NORMAL;
@@ -149,10 +168,11 @@ public class Button extends Entity {
 	}
 
 	public void setFaceSize(final float pWidth, final float pHeight) {
-		for (IEntity pEntity : this.mEntities) {
-			if (pEntity != null) {
-				pEntity.setSize(pWidth, pHeight);
-				pEntity.setPosition(pWidth/2, pHeight/2);
+		PositionerImmovableRelative positioner = PositionerImmovableRelative.getInstance();
+		for (IEntity entity : this.mEntities) {
+			if (entity != null) {
+				entity.setSize(pWidth, pHeight);
+				positioner.center(entity.getParent(), entity);
 			}
 		}
 	}
@@ -162,9 +182,10 @@ public class Button extends Entity {
 	}
 
 	protected void centerEntities(final float pWidth, final float pHeight) {
+		PositionerImmovableRelative positioner = PositionerImmovableRelative.getInstance();
 		for (IEntity entity : this.mEntities) {
 			if (entity != null) {
-				entity.setPosition(pWidth/2, pHeight/2);
+				positioner.center(entity.getParent(), entity);
 			}
 		}
 	}
