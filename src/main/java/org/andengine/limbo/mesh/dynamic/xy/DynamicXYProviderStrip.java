@@ -33,8 +33,8 @@ public class DynamicXYProviderStrip extends DynamicXYProvider {
 			throw new RuntimeException("Strip must have at least " + MINIMUM_VERTICES + " vertices (" + pVertexCount + " were given)");
 		}
 
-		
-		buildStrip(mLength, mHeight, getNumberOfVerticesMax());
+
+		calculateXY();
 	}
 
 	// ===========================================================
@@ -46,6 +46,16 @@ public class DynamicXYProviderStrip extends DynamicXYProvider {
 
 	public float getHeight() {
 		return mHeight;
+	}
+
+	public void setHeight(float height) {
+		mHeight = height;
+		setDirty(true);
+	}
+
+	public void setLength(float length) {
+		mLength = length;
+		setDirty(true);
 	}
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
@@ -64,10 +74,8 @@ public class DynamicXYProviderStrip extends DynamicXYProvider {
 
 	@Override
 	public void calculateXY() {
-		if (mModifiers != null && !mModifiers.isEmpty()) {
-			buildStrip(mLength, mHeight, getNumberOfVerticesMax());
-			calculateLengths();
-		}
+		buildStrip(mLength, mHeight, getNumberOfVerticesMax());
+		calculateLengths();
 	}
 
 	// ===========================================================
@@ -90,7 +98,7 @@ public class DynamicXYProviderStrip extends DynamicXYProvider {
 		if (length == 0 || height == 0)
 			return;
 
-		int segments = vertices/2;
+		int segments = vertices/2 - 1;
 		float segmentLength = length / (float)segments;
 		float x = -length/2;
 		float yEven = height/2;
@@ -104,9 +112,9 @@ public class DynamicXYProviderStrip extends DynamicXYProvider {
 		mX.set(1, x);
 		mY.set(1, yOdd);
 		
-		for (int i = 1; i < segments; i++) {
+		for (int i = 0; i < segments; i++) {
 			x = x + segmentLength;
-			int even = i*VERTICES_STEP + 0;
+			int even = (i+1)*VERTICES_STEP;
 			int odd = even + 1;
 
 			mX.set(even, x);

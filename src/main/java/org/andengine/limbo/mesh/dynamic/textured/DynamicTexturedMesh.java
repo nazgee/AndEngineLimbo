@@ -128,7 +128,7 @@ public class DynamicTexturedMesh extends DynamicMesh implements ShaderProgramCon
 		getDynamicTexturedMeshVertexBufferObject().onUpdateVertices(this);
 	}
 
-	public void onUpdateTextureCoordinates() {
+	public void  onUpdateTextureCoordinates() {
 		getDynamicTexturedMeshVertexBufferObject().onUpdateTextureCoordinates(this);
 	}
 
