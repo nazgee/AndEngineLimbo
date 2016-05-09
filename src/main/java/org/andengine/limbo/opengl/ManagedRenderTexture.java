@@ -85,7 +85,7 @@ public class ManagedRenderTexture extends RenderTexture {
 	protected void safeInit(final GLState pGLState) {
 		if (!isInitialized()) {
 			init(pGLState);
-			Log.v(getClass().getSimpleName(), "invoking init()");
+			//Log.v(getClass().getSimpleName(), "invoking init()");
 		}
 	}
 	// ===========================================================

@@ -43,11 +43,10 @@ public class DynamicUVMapperStrip extends DynamicUVMapper {
 		float lenEven = 0;
 		float lenOdd = 0;
 		DynamicXYProviderStrip stripxy = (DynamicXYProviderStrip)mVertexProvider;
-		
 
 		this.mSkinningPolicy.prepareToCalculate(this, stripxy);
 
-		for (int i = 0; i < stripxy.getNumberOfVertices(); i+=2) {
+		for (int i = 0; i < stripxy.getNumberOfVertices(); i+=DynamicXYProviderStrip.VERTICES_STEP) {
 			int even = i;
 			int odd = i + 1;
 
