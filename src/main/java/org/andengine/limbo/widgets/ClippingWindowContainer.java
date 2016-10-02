@@ -43,7 +43,7 @@ public class ClippingWindowContainer extends ClippingWindow {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-
+/*
 	@Override
 	public int getChildCount() {
 		return mContainer.getChildCount();
@@ -128,6 +128,7 @@ public class ClippingWindowContainer extends ClippingWindow {
 	public void callOnChildren(IEntityParameterCallable pEntityParameterCallable, IEntityMatcher pEntityMatcher) {
 		mContainer.callOnChildren(pEntityParameterCallable, pEntityMatcher);
 	}
+	*/
 	// ===========================================================
 	// Methods
 	// ===========================================================
