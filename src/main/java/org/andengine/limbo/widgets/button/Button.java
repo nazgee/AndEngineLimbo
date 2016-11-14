@@ -34,7 +34,7 @@ public class Button extends Entity {
 	private OnClickListener mOnClickUpListener;
 	private OnClickListener mOnClickDownListener;
 	private boolean mEnabled = true;
-	private State mState;
+	private State mState = State.UNDEFINED;
 	private boolean mIsBistable = false;
 	// ===========================================================
 	// Constructors
@@ -108,19 +108,8 @@ public class Button extends Entity {
 		this.mEntities[State.PRESSED.getEntityIndex()] = pPressed;
 		this.mEntities[State.DISABLED.getEntityIndex()] = pDisabled;
 
-		// initial positioning
-		{
-			attachChild(pNormal);
-			attachChild(pPressed);
-			attachChild(pDisabled);
-			centerEntities(getWidth(), getHeight());
-			detachChild(pNormal);
-			detachChild(pPressed);
-			detachChild(pDisabled);
-		}
-
-		attachDefaultFace();
 		this.mState = State.NORMAL;
+		positionEntities();
 	}
 
 	/**
@@ -142,19 +131,8 @@ public class Button extends Entity {
 		this.mEntities[State.PRESSED.getEntityIndex()] = pPressed;
 		this.mEntities[State.DISABLED.getEntityIndex()] = pDisabled;
 
-		// initial positioning
-		{
-			attachChild(pNormal);
-			attachChild(pPressed);
-			attachChild(pDisabled);
-			centerEntities(getWidth(), getHeight());
-			detachChild(pNormal);
-			detachChild(pPressed);
-			detachChild(pDisabled);
-		}
-
-		attachDefaultFace();
 		this.mState = State.NORMAL;
+		positionEntities();
 	}
 	// ===========================================================
 	// Getter & Setter
@@ -181,13 +159,29 @@ public class Button extends Entity {
 		return this.mEntities[pState.getEntityIndex()];
 	}
 
-	protected void centerEntities(final float pWidth, final float pHeight) {
+	public void positionEntities() {
+		detachChild(mEntities[0]);
+		detachChild(mEntities[1]);
+		detachChild(mEntities[2]);
+
+		attachChild(mEntities[0]);
+		attachChild(mEntities[1]);
+		attachChild(mEntities[2]);
+
 		PositionerImmovableRelative positioner = PositionerImmovableRelative.getInstance();
 		for (IEntity entity : this.mEntities) {
 			if (entity != null) {
 				positioner.center(entity.getParent(), entity);
 			}
 		}
+
+		detachChild(mEntities[0]);
+		detachChild(mEntities[1]);
+		detachChild(mEntities[2]);
+
+		State savedState = mState;
+		mState = State.UNDEFINED;
+		changeState(savedState);
 	}
 
 	public boolean isEnabled() {
@@ -334,6 +328,7 @@ public class Button extends Entity {
 		// Elements
 		// ===========================================================
 
+		UNDEFINED(0),
 		NORMAL(0),
 		PRESSED(1),
 		DISABLED(2);
