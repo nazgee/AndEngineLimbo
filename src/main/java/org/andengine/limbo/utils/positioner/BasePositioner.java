@@ -119,6 +119,13 @@ public abstract class BasePositioner {
 		place(pImmovable, pMovable, eAnchorPointsPair.VER_BTM_R.relation, tx, ty);
 	}
 
+	public void placeLeftOf(IEntity pImmovable, IEntity pMovable) {
+		placeLeftOf(pImmovable, pMovable, 0, 0);
+	}
+	public void placeLeftOf(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		placeHorizontal(pImmovable, pMovable, eAnchorPointsPair.HOR_L_CNT.relation, tx, ty);
+	}
+
 	public void placeLeftOfAndCenter(IEntity pImmovable, IEntity pMovable) {
 		placeLeftOfAndCenter(pImmovable, pMovable, 0, 0);
 	}
@@ -138,6 +145,13 @@ public abstract class BasePositioner {
 	}
 	public void placeLeftOfBottomsAligned(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
 		place(pImmovable, pMovable, eAnchorPointsPair.HOR_L_BTM.relation, tx, ty);
+	}
+
+	public void placeRightOf(IEntity pImmovable, IEntity pMovable) {
+		placeRightOf(pImmovable, pMovable, 0, 0);
+	}
+	public void placeRightOf(IEntity pImmovable, IEntity pMovable, final float tx, final float ty) {
+		placeHorizontal(pImmovable, pMovable, eAnchorPointsPair.HOR_R_CNT.relation, tx, ty);
 	}
 
 	public void placeRightOfAndCenter(IEntity pImmovable, IEntity pMovable) {
