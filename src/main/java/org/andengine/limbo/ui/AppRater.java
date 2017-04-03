@@ -13,7 +13,7 @@ public class AppRater {
 	private static final String APPRATER = "apprater";
 	private static final String DONTSHOWAGAIN = "dontshowagain";
 
-	public static void onAppLaunched(Context ctx, String pAppName, String pPckgName, Drawable pIcon, int pDaysUntilPrompt, int pLaunchesUntilPrompt) {
+	public static void onAppLaunched(Context ctx, String pAppName, String pPckgName, Drawable pIcon, int minutesUntilPrompt, int pLaunchesUntilPrompt) {
 		SharedPreferences prefs = ctx.getSharedPreferences(APPRATER, 0);
 		if (prefs.getBoolean(DONTSHOWAGAIN, false)) {
 			return;
@@ -35,7 +35,7 @@ public class AppRater {
 		// Wait at least n days before opening
 		if (launch_count >= pLaunchesUntilPrompt) {
 			if (System.currentTimeMillis() >= date_firstLaunch
-					+ (pDaysUntilPrompt * 24 * 60 * 60 * 1000)) {
+					+ (minutesUntilPrompt * 60 * 1000)) {
 				showRateDialog(ctx, editor, pAppName, pPckgName, pIcon);
 			}
 		}
